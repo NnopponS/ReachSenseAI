@@ -1,1 +1,1 @@
-{"name":"ReachSenseAI Research Workbench","short_name":"ReachSenseAI","lang":"th","start_url":"/","display":"standalone","background_color":"#f4f5ef","theme_color":"#123c38","icons":[{"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]}
+{"name":"ReachSenseAI Research Workbench","short_name":"ReachSenseAI","lang":"th","start_url":"./","display":"standalone","background_color":"#f4f5ef","theme_color":"#123c38","icons":[{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]}

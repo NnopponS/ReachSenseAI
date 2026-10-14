@@ -1,5 +1,22 @@
 # Finger-fixture feasibility gate
 
+## Six-finger printable wrap (Web path)
+
+The new [six-finger wrap source](finger_wrap.scad) and [Thai printing/seating guide](finger-wrap-guide.th.md) support separate thumb/middle/little markers on both hands. The deck's distal edge and the fingertip stop's **inner** surface share Y=0; the outer wall extends 1.2 mm farther. This defines longitudinal registration only, not a verified anatomical 3D point.
+
+The Web CAD page offers 12–26 mm candidate openings and 8–16 mm marker black edges, both in 0.5 mm increments. Its 493 shared meshes are exported from this source, with checked closure, connectedness, volume and SHA-256. The actual displayed STL bytes are also downloaded. Single-color holders use printed matte black/white paper or sticker markers, with the full 2 mm white margins retained. The optional ladder strip is TPU-only and needs a return-loop/fastener; a 6 mm hook-and-loop strap can be used instead.
+
+[Default six-part ZIP](printables/finger-wrap-v1/reachsense-six-finger-kit.zip) · [millimeter 3MF build plate](printables/finger-wrap-v1/all-six-holders.3mf) · [A4 marker artwork](printables/finger-wrap-v1/markers-a4.svg). The browser exports custom-size kits with six STL/SCAD files, all artwork, a 3MF plate, instructions and integrity metadata. CAD/mesh checks do not validate fit, remount drift, comfort, occlusion or accuracy. Begin with one middle-finger fit print before a complete set.
+
+To rebuild without overwriting user outputs:
+
+```sh
+.venv/bin/python -m hardware.finger_wrap --output-dir hardware/generated/new-default-kit
+.venv/bin/python -m hardware.finger_wrap_catalog --output-dir hardware/generated/new-catalog --jobs 4
+```
+
+OpenSCAD 2021.01+ is only needed to change/rebuild the CAD source, not to view or download the published sizes. The cloud catalog was generated with four workers on four allocated CPUs; all 493 meshes passed the export checks. The original multi-face native jig design below is a different marker/calibration profile.
+
 The next physical gate is a repeatable anatomical relationship between each middle fingertip and its multi-face rigid reference. This directory supplies an adjustable CAD candidate and nominal geometry for experiments, not a validated or participant-ready fixture.
 
 ## Candidate design

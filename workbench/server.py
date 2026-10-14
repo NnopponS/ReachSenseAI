@@ -20,7 +20,15 @@ ASSETS = {
     '/style.css': ('style.css', 'text/css; charset=utf-8'),
     '/icon.svg': ('icon.svg', 'image/svg+xml'),
     '/manifest.webmanifest': ('manifest.webmanifest', 'application/manifest+json'),
+    '/cad': ('cad.html', 'text/html; charset=utf-8'),
+    '/cad/': ('cad.html', 'text/html; charset=utf-8'),
+    '/cad/cad.js': ('cad.js', 'text/javascript; charset=utf-8'),
+    '/cad/viewer.js': ('cad-viewer.js', 'text/javascript; charset=utf-8'),
+    '/cad/model.js': ('cad-model.js', 'text/javascript; charset=utf-8'),
+    '/cad/cad.css': ('cad.css', 'text/css; charset=utf-8'),
 }
+THREE_ASSETS = {'/cad/vendor/three.module.js':'build/three.module.js',
+                '/cad/vendor/three.core.js':'build/three.core.js'}
 MAX_UPLOAD = 8 * 1024 * 1024
 RGB_ASSETS = {'index.html', 'style.css', 'app.js', 'core.js', 'engine.js', 'storage.js',
               'worker.js', 'vendor/opencv.js', 'vendor/runtime.json', 'examples/exploratory.json'}
@@ -55,7 +63,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('X-Content-Type-Options', 'nosniff')
         # The pinned OpenCV Emscripten bindings generate JS functions in their worker.
         # Keep this capability on the worker response; ordinary page scripts stay restricted.
-        wasm = " 'wasm-unsafe-eval' 'unsafe-eval'" if urlsplit(self.path).path == '/rgb-lab/worker.js' else ''
+        wasm = " 'wasm-unsafe-eval' 'unsafe-eval'" if urlsplit(self.path).path in ('/rgb-lab/worker.js','/marker-worker.js') else ''
         self.send_header('Content-Security-Policy', f"default-src 'self'; img-src 'self' blob: data:; media-src 'self' blob:; script-src 'self'{wasm}; style-src 'self'; connect-src 'self'; worker-src 'self'; frame-ancestors 'none'")
         self.end_headers()
         self.wfile.write(payload)
@@ -65,14 +73,33 @@ class Handler(BaseHTTPRequestHandler):
         if path == '/api/health':
             self.respond(200, {'status': 'ok', 'opencv_version': cv2.__version__,
                               'mode': 'research-workbench', 'measurement_valid': False})
-        elif path == '/api/demo.png':
+        elif path in ('/api/demo.png','/demo.png'):
             self.respond(200, demonstration_image(), 'image/png')
+        elif path == '/runtime/opencv.js':
+            self.respond(200,(ROOT.parent/'web/vendor/opencv.js').read_bytes(),'text/javascript; charset=utf-8')
+        elif path in ('/marker-worker.js','/detector.js'):
+            self.respond(200,(ROOT/path[1:]).read_bytes(),'text/javascript; charset=utf-8')
         elif path == '/marker-sheet.svg':
             self.respond(200, (ROOT.parent/'hardware/prototypes/marker-sheet.svg').read_bytes(), 'image/svg+xml')
         elif path.startswith('/rgb-lab/') and (path[len('/rgb-lab/'):] or 'index.html') in RGB_ASSETS:
             name = path[len('/rgb-lab/'):] or 'index.html'
             mime = {'.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json'}[Path(name).suffix]
             self.respond(200, (ROOT.parent/'web'/name).read_bytes(), mime+'; charset=utf-8')
+        elif path == '/cad/vendor/jszip.min.js':
+            self.respond(200,(ROOT/'node_modules/jszip/dist/jszip.min.js').read_bytes(),'text/javascript; charset=utf-8')
+        elif path.startswith('/cad/data/'):
+            name=path[len('/cad/data/'):]
+            directory=ROOT.parent/'hardware/printables/finger-wrap-catalog-v1'
+            catalog=json.loads((directory/'catalog.json').read_text(encoding='utf-8'))
+            allowed={'catalog.json','finger-wrap.scad','guide.th.md',catalog['strap']['file'],
+                     *(entry['file'] for entry in catalog['meshes'].values())}
+            if name not in allowed:
+                self.respond(404,{'error':'CAD file not found'})
+            else:
+                mime={'.json':'application/json','.scad':'text/plain','.md':'text/markdown','.stl':'model/stl'}[Path(name).suffix]
+                self.respond(200,(directory/name).read_bytes(),mime)
+        elif path in THREE_ASSETS:
+            self.respond(200,(ROOT/'node_modules'/'three'/THREE_ASSETS[path]).read_bytes(),'text/javascript; charset=utf-8')
         elif path in ASSETS:
             filename, mime = ASSETS[path]
             self.respond(200, (ROOT/filename).read_bytes(), mime)

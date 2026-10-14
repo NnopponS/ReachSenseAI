@@ -1,10 +1,12 @@
 import {estimate} from './measurement.js';
+import {MarkerDetector} from './detector.js';
 
 const $ = id => document.getElementById(id);
 const canvas = $('canvas'), ctx = canvas.getContext('2d'), video = $('video');
 let frame = null, points = [], observations = null, stream = null, live = false;
-let revision = 0, controller = null, timer = null, result = null, synthetic = false;
+let revision = 0, timer = null, result = null, synthetic = false;
 let sourceHash = null;
+let detector=null;
 const records = [];
 const say = message => { $('status').textContent = message; };
 
@@ -70,7 +72,7 @@ function update() {
 }
 
 function invalidate() {
-  revision++; clearTimeout(timer); controller?.abort(); controller=null;
+  revision++; clearTimeout(timer);
 }
 
 function stopCamera() {
@@ -97,25 +99,24 @@ async function detect(myRevision) {
   const captured=frame;
   const blob=await new Promise(resolve=>captured.toBlob(resolve,'image/png'));
   if (myRevision!==revision || !blob) return;
-  const currentController=new AbortController(); controller=currentController;
   try {
-    const response=await fetch('/api/observe',{method:'POST',headers:{'Content-Type':'image/png'},body:blob,signal:currentController.signal});
-    const report=await response.json();
+    detector??=new MarkerDetector();
+    say('กำลังตรวจ marker ในเบราว์เซอร์ · ไม่มีการอัปโหลดภาพ');
+    const report=await detector.observe(captured);
     if (myRevision!==revision) return;
-    if (!response.ok) throw new Error(report.error);
     observations=report;
     if (!live && globalThis.crypto?.subtle) {
       const digest=await crypto.subtle.digest('SHA-256',await blob.arrayBuffer());
       if (myRevision!==revision) return;
       sourceHash=[...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,'0')).join('');
     }
-    say(live ? 'ตรวจภาพกล้อง · ไม่มีการเก็บภาพ · หยุดภาพเมื่อพร้อมวัด' : 'แตะ 4 จุดตามลำดับ · ถ้าปลายนิ้วถูกบัง ให้เปลี่ยนภาพ');
+    say(live ? 'ตรวจภาพกล้องในเบราว์เซอร์ · หยุดภาพเมื่อพร้อมวัด' : 'แตะ 4 จุดตามลำดับ · ถ้าปลายนิ้วถูกบัง ให้เปลี่ยนภาพ');
     update();
   } catch(error) {
     if (myRevision===revision && error.name!=='AbortError') {
       observations=null; say(`ตรวจ marker ไม่สำเร็จ: ${error.message} · ยังเลือกจุดด้วยมือได้`); update();
     }
-  } finally { if(controller===currentController) controller=null; }
+  }
 }
 
 async function liveLoop(myRevision) {
@@ -162,7 +163,7 @@ $('upload').addEventListener('change',()=>{
 $('demo').addEventListener('click',async()=>{
   stopCamera(); const myRevision=revision;
   try {
-    const response=await fetch('/api/demo.png');
+    const response=await fetch(new URL('./demo.png',import.meta.url));
     if (!response.ok) throw new Error('โหลดภาพจำลองไม่ได้');
     const blob=await response.blob(); if(myRevision===revision) await loadBlob(blob,true);
   } catch(error) {if(myRevision===revision) say(error.message);}
@@ -191,5 +192,5 @@ $('export').addEventListener('click',()=>{
   const url=URL.createObjectURL(blob), link=document.createElement('a');
   link.href=url;link.download='reachsense-experiments.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
-window.addEventListener('pagehide',stopCamera);
+window.addEventListener('pagehide',()=>{stopCamera();detector?.dispose();detector=null;});
 update();

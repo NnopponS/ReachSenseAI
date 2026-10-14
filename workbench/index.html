@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#123c38"><title>ReachSenseAI · ห้องทดลองการวัด</title>
-  <link rel="icon" href="/icon.svg"><link rel="manifest" href="/manifest.webmanifest">
-  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="./icon.svg"><link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<header><a class="brand" href="/">◈ ReachSense<span>AI</span></a><span class="pill">RESEARCH WORKBENCH · 01</span></header>
+<header><a class="brand" href="./">◈ ReachSense<span>AI</span></a><span class="pill">RESEARCH WORKBENCH · 01</span><a class="back-link" href="./cad/">ดู CAD และดาวน์โหลดฐาน 6 นิ้ว →</a></header>
 <main>
   <section class="intro"><p class="eyebrow">เอื้อมมือด้านหลัง · BACK SCRATCH TEST</p>
     <h1>เห็นจุดวัดชัดขึ้น<br><span>เข้าใจระยะได้ตรงกัน</span></h1>
@@ -21,11 +21,11 @@
       </div>
       <div class="toolbar"><button id="camera">เปิดกล้อง</button><button id="freeze" disabled class="secondary">หยุดภาพเพื่อวัด</button><button id="stop" disabled class="secondary">ปิดกล้อง</button>
         <label class="button secondary">เลือกภาพ<input id="upload" type="file" accept="image/png,image/jpeg" hidden></label><button id="demo" class="text-button">ลองภาพจำลอง</button></div>
-      <p id="status" role="status" aria-live="polite">ใช้ PNG/JPEG ไม่เกิน 8 MB · ภาพไม่ถูกบันทึกบนเซิร์ฟเวอร์</p>
+      <p id="status" role="status" aria-live="polite">ใช้ PNG/JPEG ไม่เกิน 8 MB · ภาพประมวลผลในเบราว์เซอร์</p>
       <div class="marker-list" id="markers">ตรวจ ArUco: รอภาพ</div>
       <p class="small">กรอบสีเขียวคือ marker; จุดกึ่งกลางที่ฉายจากรูปสี่เหลี่ยมเป็นจุดอ้างอิง ไม่ใช่ปลายนิ้ว</p>
-      <a href="/marker-sheet.svg" download="reachsense-markers.svg">ดาวน์โหลดแผ่น marker 21–23 / 31–33</a>
-      <p class="small"><a href="/rgb-lab/">เปิด RGB Lab เดิมสำหรับอุปกรณ์ที่ calibrate แล้ว</a> · โหมดนั้นต้องใช้อุปกรณ์แข็งและ calibration จริง</p>
+      <a href="./marker-sheet.svg" download="reachsense-markers.svg">ดาวน์โหลดแผ่น marker 21–23 / 31–33</a>
+      <p class="small"><a href="./rgb-lab/">เปิด RGB Lab เดิมสำหรับอุปกรณ์ที่ calibrate แล้ว</a> · โหมดนั้นต้องใช้อุปกรณ์แข็งและ calibration จริง</p>
     </section>
     <aside>
       <section class="card settings"><h2>02 / ตั้งค่าการทดลอง</h2>
@@ -46,7 +46,7 @@
     </aside>
   </div>
   <section class="card notes"><div><p class="eyebrow">การทดลองครั้งนี้</p><h2>เก็บหลักฐาน ก่อนสรุปความแม่นยำ</h2><p>ตัวเลขเป็นค่าประมาณจากภาพ ไม่ใช่การวัด 3D ที่ผ่านการรับรอง เกณฑ์มาจากภาพที่ผู้ใช้ให้ ยังไม่มีแหล่งอ้างอิง และช่วงรอยต่อบางช่วงไม่ได้ระบุ</p></div><div><p id="records">ยังไม่มีค่าที่เก็บ</p><button id="export" class="secondary" disabled>ส่งออก JSON (ไม่รวมภาพ)</button><p class="small">ค่าที่เก็บอยู่ในหน่วยความจำ ปิดหรือรีเฟรชหน้าจะหาย</p></div></section>
-  <details class="card"><summary>ตารางเกณฑ์ตามภาพ (ซม.) และการติด marker</summary><div class="table-scroll"><table><thead><tr><th>ท่า</th><th>เกณฑ์</th><th>ต่ำกว่า</th><th>มาตรฐาน</th><th>สูงกว่า</th></tr></thead><tbody><tr><td>ขวาอยู่บน</td><td>ชาย</td><td>&lt;4</td><td>4–5.9</td><td>&gt;6</td></tr><tr><td>ขวาอยู่บน</td><td>หญิง</td><td>&lt;5</td><td>5–6.9</td><td>&gt;7</td></tr><tr><td>ซ้ายอยู่บน</td><td>ชาย</td><td>&lt;0</td><td>0–2.9</td><td>&gt;3</td></tr><tr><td>ซ้ายอยู่บน</td><td>หญิง</td><td>&lt;0</td><td>0–5.9</td><td>&gt;6</td></tr></tbody></table></div><p>โปรไฟล์ทดลองใหม่: ซ้าย 21=โป้ง, 22=กลาง, 23=ก้อย; ขวา 31=โป้ง, 32=กลาง, 33=ก้อย ใช้ DICT_4X4_100 พิมพ์ 100% และวัดขอบดำจริง โปรไฟล์นี้ต่างจากอุปกรณ์หลายหน้าของ iOS เดิม</p><p>เปิดกล้องบนมือถือผ่าน HTTPS และอนุญาตกล้อง ภาพจะส่งไปยังเซิร์ฟเวอร์ที่ให้บริการหน้านี้เพื่อประมวลผล ArUco โดยไม่มีการเก็บภาพ รุ่นนี้ยังไม่มีการตรวจ MediaPipe หรือการติดตามปลายนิ้วอัตโนมัติ</p></details>
+  <details class="card"><summary>ตารางเกณฑ์ตามภาพ (ซม.) และการติด marker</summary><div class="table-scroll"><table><thead><tr><th>ท่า</th><th>เกณฑ์</th><th>ต่ำกว่า</th><th>มาตรฐาน</th><th>สูงกว่า</th></tr></thead><tbody><tr><td>ขวาอยู่บน</td><td>ชาย</td><td>&lt;4</td><td>4–5.9</td><td>&gt;6</td></tr><tr><td>ขวาอยู่บน</td><td>หญิง</td><td>&lt;5</td><td>5–6.9</td><td>&gt;7</td></tr><tr><td>ซ้ายอยู่บน</td><td>ชาย</td><td>&lt;0</td><td>0–2.9</td><td>&gt;3</td></tr><tr><td>ซ้ายอยู่บน</td><td>หญิง</td><td>&lt;0</td><td>0–5.9</td><td>&gt;6</td></tr></tbody></table></div><p>โปรไฟล์ทดลองใหม่: ซ้าย 21=โป้ง, 22=กลาง, 23=ก้อย; ขวา 31=โป้ง, 32=กลาง, 33=ก้อย ใช้ DICT_4X4_100 พิมพ์ 100% และวัดขอบดำจริง โปรไฟล์นี้ต่างจากอุปกรณ์หลายหน้าของ iOS เดิม</p><p>เปิดกล้องบนมือถือผ่าน HTTPS และอนุญาตกล้อง ภาพประมวลผล ArUco ในเบราว์เซอร์และไม่มีการอัปโหลดภาพ รุ่นนี้ยังไม่มีการตรวจ MediaPipe หรือการติดตามปลายนิ้วอัตโนมัติ</p></details>
 </main><footer>ReachSenseAI · Web เป็นทางหลัก · รวมต้นแบบ Android / iOS / RGB Lab ไว้ครบ</footer>
-<script type="module" src="/app.js"></script>
+<script type="module" src="./app.js"></script>
 </body></html>

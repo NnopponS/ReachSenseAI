@@ -1,0 +1,387 @@
+{
+  "schema_version": 1,
+  "design_version": "finger-wrap-v1",
+  "units": "mm",
+  "dictionary": "DICT_4X4_100",
+  "parameters": {
+    "edge": 10.0,
+    "d21": 20.0,
+    "d22": 17.0,
+    "d23": 14.0,
+    "d31": 20.0,
+    "d32": 17.0,
+    "d33": 14.0
+  },
+  "source_sha256": "9a05cdbab52721528d86b4ea06b3f9e47e02b50b3f445b6dca918d48ad8f02b5",
+  "recipe_sha256": "0e417fc1d637b3c3909c08f75652e1e7da9e418d189cbacee5f17eea2c3483a7",
+  "opencv_version": "4.13.0",
+  "status": "experimental-unprinted-not-valid-for-scoring",
+  "measurement_valid": false,
+  "calibration_required": "Physical marker dimensions, remount drift and anatomical X/Z remain unverified",
+  "models": [
+    {
+      "id": 21,
+      "role": "left-thumb",
+      "label": "ซ้าย · นิ้วโป้ง",
+      "diameter_mm": 20.0,
+      "stl": "left-thumb-21.stl",
+      "scad": "left-thumb-21.scad",
+      "marker_svg": "marker-21.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -8.0,
+        13.15
+      ],
+      "center_to_distal_plane_mm": 8.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "registration_plane_y_mm": 0,
+      "outer_stop_y_mm": 1.2,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "longitudinal-stop-only-xz-unverified",
+      "mesh": {
+        "triangles": 680,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 2071.003,
+        "bounds_mm": [
+          [
+            -17.1,
+            -24.0,
+            0.0
+          ],
+          [
+            17.1,
+            1.2,
+            13.2
+          ]
+        ]
+      }
+    },
+    {
+      "id": 22,
+      "role": "left-middle",
+      "label": "ซ้าย · นิ้วกลาง",
+      "diameter_mm": 17.0,
+      "stl": "left-middle-22.stl",
+      "scad": "left-middle-22.scad",
+      "marker_svg": "marker-22.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -8.0,
+        11.65
+      ],
+      "center_to_distal_plane_mm": 8.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "registration_plane_y_mm": 0,
+      "outer_stop_y_mm": 1.2,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "longitudinal-stop-only-xz-unverified",
+      "mesh": {
+        "triangles": 664,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 1937.558,
+        "bounds_mm": [
+          [
+            -15.6,
+            -24.0,
+            0.0
+          ],
+          [
+            15.6,
+            1.2,
+            11.7
+          ]
+        ]
+      }
+    },
+    {
+      "id": 23,
+      "role": "left-little",
+      "label": "ซ้าย · นิ้วก้อย",
+      "diameter_mm": 14.0,
+      "stl": "left-little-23.stl",
+      "scad": "left-little-23.scad",
+      "marker_svg": "marker-23.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -8.0,
+        10.15
+      ],
+      "center_to_distal_plane_mm": 8.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "registration_plane_y_mm": 0,
+      "outer_stop_y_mm": 1.2,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "longitudinal-stop-only-xz-unverified",
+      "mesh": {
+        "triangles": 648,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 1804.966,
+        "bounds_mm": [
+          [
+            -14.1,
+            -24.0,
+            0.0
+          ],
+          [
+            14.1,
+            1.2,
+            10.2
+          ]
+        ]
+      }
+    },
+    {
+      "id": 31,
+      "role": "right-thumb",
+      "label": "ขวา · นิ้วโป้ง",
+      "diameter_mm": 20.0,
+      "stl": "right-thumb-31.stl",
+      "scad": "right-thumb-31.scad",
+      "marker_svg": "marker-31.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -8.0,
+        13.15
+      ],
+      "center_to_distal_plane_mm": 8.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "registration_plane_y_mm": 0,
+      "outer_stop_y_mm": 1.2,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "longitudinal-stop-only-xz-unverified",
+      "mesh": {
+        "triangles": 680,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 2071.003,
+        "bounds_mm": [
+          [
+            -17.1,
+            -24.0,
+            0.0
+          ],
+          [
+            17.1,
+            1.2,
+            13.2
+          ]
+        ]
+      }
+    },
+    {
+      "id": 32,
+      "role": "right-middle",
+      "label": "ขวา · นิ้วกลาง",
+      "diameter_mm": 17.0,
+      "stl": "right-middle-32.stl",
+      "scad": "right-middle-32.scad",
+      "marker_svg": "marker-32.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -8.0,
+        11.65
+      ],
+      "center_to_distal_plane_mm": 8.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "registration_plane_y_mm": 0,
+      "outer_stop_y_mm": 1.2,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "longitudinal-stop-only-xz-unverified",
+      "mesh": {
+        "triangles": 664,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 1937.558,
+        "bounds_mm": [
+          [
+            -15.6,
+            -24.0,
+            0.0
+          ],
+          [
+            15.6,
+            1.2,
+            11.7
+          ]
+        ]
+      }
+    },
+    {
+      "id": 33,
+      "role": "right-little",
+      "label": "ขวา · นิ้วก้อย",
+      "diameter_mm": 14.0,
+      "stl": "right-little-33.stl",
+      "scad": "right-little-33.scad",
+      "marker_svg": "marker-33.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -8.0,
+        10.15
+      ],
+      "center_to_distal_plane_mm": 8.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "registration_plane_y_mm": 0,
+      "outer_stop_y_mm": 1.2,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "longitudinal-stop-only-xz-unverified",
+      "mesh": {
+        "triangles": 648,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 1804.966,
+        "bounds_mm": [
+          [
+            -14.1,
+            -24.0,
+            0.0
+          ],
+          [
+            14.1,
+            1.2,
+            10.2
+          ]
+        ]
+      }
+    }
+  ],
+  "strap_mesh": {
+    "triangles": 364,
+    "closed": true,
+    "connected_components": 1,
+    "volume_mm3": 524.4,
+    "bounds_mm": [
+      [
+        -45.0,
+        -3.0,
+        0.0
+      ],
+      [
+        45.0,
+        3.0,
+        1.3
+      ]
+    ]
+  },
+  "files": {
+    "left-thumb-21.stl": {
+      "bytes": 34084,
+      "sha256": "a291a93f1b59abe0ef0484e256e5c71a8dcb4de03eaccaa1fb2be9e3b7797bd8"
+    },
+    "left-thumb-21.scad": {
+      "bytes": 3207,
+      "sha256": "89089a23f1074cec88e3a22d5d7b2e3f759fe1af40d3b4009137c9f79893bfc5"
+    },
+    "marker-21.svg": {
+      "bytes": 2798,
+      "sha256": "803ed2626f2ec7c04f997bd1f664b1b5171766d2d7e49b806ee67c5aa400f7cb"
+    },
+    "left-middle-22.stl": {
+      "bytes": 33284,
+      "sha256": "51bd99e653a3f7d3f2ffa6e99f3bc7da993477e54ac05f958f93d74c265110ec"
+    },
+    "left-middle-22.scad": {
+      "bytes": 3207,
+      "sha256": "9a05cdbab52721528d86b4ea06b3f9e47e02b50b3f445b6dca918d48ad8f02b5"
+    },
+    "marker-22.svg": {
+      "bytes": 2618,
+      "sha256": "bd163f7b70604e4cc1fde0166a9a3e8a3d70d4ca4eec40d1853ed4e46706b7d5"
+    },
+    "left-little-23.stl": {
+      "bytes": 32484,
+      "sha256": "2de3c7a15f2f7c2d4044658ce009bb824eaa593858d21f752ee0376945866f26"
+    },
+    "left-little-23.scad": {
+      "bytes": 3207,
+      "sha256": "2e53f8f73bbfa6fb9d205219355056f751fe8be2466b3ccd641e722d83b6c169"
+    },
+    "marker-23.svg": {
+      "bytes": 2708,
+      "sha256": "c2ba101c5ba850055458f4f11db1d3abcf47d83bff2fc23b41bb9aa45cfd967f"
+    },
+    "right-thumb-31.stl": {
+      "bytes": 34084,
+      "sha256": "a291a93f1b59abe0ef0484e256e5c71a8dcb4de03eaccaa1fb2be9e3b7797bd8"
+    },
+    "right-thumb-31.scad": {
+      "bytes": 3207,
+      "sha256": "c1ad4261d153626bda798ebf96b670c4a9b8fb7709b90e983d6a8aed921c11e5"
+    },
+    "marker-31.svg": {
+      "bytes": 2618,
+      "sha256": "6836140a3e17193e5ab2bb079a8694d30bd0352b68755bf6b0f9ec023b39cf90"
+    },
+    "right-middle-32.stl": {
+      "bytes": 33284,
+      "sha256": "51bd99e653a3f7d3f2ffa6e99f3bc7da993477e54ac05f958f93d74c265110ec"
+    },
+    "right-middle-32.scad": {
+      "bytes": 3207,
+      "sha256": "aa3caf9e05375a1aed6d68640e24b5145e780aa8bd84e07ab180fe2bbf5d4944"
+    },
+    "marker-32.svg": {
+      "bytes": 2438,
+      "sha256": "0d90e74aa2714dbba414e4c26a50a37ff06688aecbaae799f8de1a83660979d4"
+    },
+    "right-little-33.stl": {
+      "bytes": 32484,
+      "sha256": "2de3c7a15f2f7c2d4044658ce009bb824eaa593858d21f752ee0376945866f26"
+    },
+    "right-little-33.scad": {
+      "bytes": 3207,
+      "sha256": "afce5d1a00ae20360b867cd3479f8818a8ef817afddea584061a7a29d7aeef7c"
+    },
+    "marker-33.svg": {
+      "bytes": 2618,
+      "sha256": "e3e518c58fcc4b344077feddfa3f7980a658aec074ac19e0dec3ba53bd5a9afc"
+    },
+    "tpu-ladder-strip.stl": {
+      "bytes": 18284,
+      "sha256": "16fd45f34108e72218a5f724f2dc5678511495da7ba9d6edcd1e8476ee158b75"
+    },
+    "markers-a4.svg": {
+      "bytes": 15955,
+      "sha256": "01d2cd1b7fa63ac39717f3b63ecd1e67045cc5235da3271975f2dfe2e278fc93"
+    },
+    "all-six-holders.3mf": {
+      "bytes": 35221,
+      "sha256": "5f33caf25dbfeca3ea684dcf46cbd713859bc242071d81f4fbc761a522193207"
+    },
+    "finger-wrap.scad": {
+      "bytes": 3207,
+      "sha256": "9a05cdbab52721528d86b4ea06b3f9e47e02b50b3f445b6dca918d48ad8f02b5"
+    },
+    "วิธีพิมพ์และสวม.th.md": {
+      "bytes": 7745,
+      "sha256": "c5bada8a695bedb36b4038a565f826417fdf7fb5a7418a08a1f2388f85a37282"
+    }
+  }
+}

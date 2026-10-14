@@ -2,6 +2,8 @@
 
 ## Web-first development
 
+The full Web app is deployed by [GitHub Pages Actions](.github/workflows/pages.yml) from main. The Thai workbench processes ArUco images in its browser worker; its [CAD page](workbench/cad.html) previews/downloads six printable finger holders, paper marker artwork, OpenSCAD sources and a millimeter 3MF plate. [Pages build and deployment instructions](docs/github-pages.md) describe the static build and project-subpath checks.
+
 The primary path now targets ordinary webcams and Android/iOS browsers. Start with the [Thai Web research workbench](workbench/README.md) and the [project audit and measurement plan](docs/web-first-plan.th.md). It supports six-marker observations and manual image-plane ruler/fingertip experiments with the user-supplied reference table. It does not yet provide automatic or validated 3D measurements.
 
 All upstream development paths are now combined: [calibrated browser RGB Lab](web/README.md), [native Android dual-camera capture](android/README.md), and [native iOS TrueDepth capture](ios/README.md). The RGB Lab has an automatic rigid-fixture pose/protocol pipeline, but its example calibration cannot produce accepted research trials. The six-finger Web experiment has different geometry and does not reuse that calibration.

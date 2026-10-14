@@ -2,7 +2,7 @@
 
 Static browser research prototype on the `develop/rgb-web` branch. GitHub Pages serves it; a dedicated worker processes RGB camera frames locally using pinned OpenCV.js 4.13. No server image processing or TrueDepth access is involved.
 
-Imported into the combined `NnopponS/ReachSenseAI` main branch. The [Thai manual baseline workbench](../workbench/README.md) serves this lab at `/rgb-lab/`, so both Web modes can be reached from one development server. The six-finger marker proposal requires a different geometry/profile; this solver still assumes measured rigid fixtures. Main pushes run software checks; Pages deployment is an optional manual workflow input and has not been performed in the destination repository.
+Imported into the combined `NnopponS/ReachSenseAI` main branch. The [Thai manual baseline workbench](../workbench/README.md) serves this lab at `/rgb-lab/`, so both Web modes can be reached from one development server. The six-finger marker proposal requires a different geometry/profile; this solver still assumes measured rigid fixtures. Main pushes run software checks and the complete-site deployment workflow in `pages.yml`.
 
 ```mermaid
 flowchart LR
@@ -31,4 +31,4 @@ IndexedDB retains sessions without automatic deletion, but browsers can evict st
 
 `npm ci`, `npm test`, `npx playwright install chromium`, `npm run browser-test` from this folder. Serve this folder through a local HTTP server, for example `python -m http.server 8080 --directory web` from the repository root. Camera access requires localhost or HTTPS. Assets use relative URLs for the GitHub Pages project subpath.
 
-GitHub Actions runs the core and actual browser checks on main and `develop/rgb-web`. The native instruments and low-calibration workbench remain separate measurement paths within the same repository.
+GitHub Actions runs the core and actual browser checks on main and `develop/rgb-web`. `pages.yml` deploys the complete workbench/CAD site and includes this RGB Lab under `rgb-lab/`; `web.yml` only verifies this original app. The native instruments and low-calibration workbench remain separate measurement paths within the same repository.

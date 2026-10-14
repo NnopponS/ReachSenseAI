@@ -14,7 +14,8 @@ try {
   page.on('response',response=>{if(response.status()>=400) errors.push(`${response.status()} ${response.url()}`);});
   await page.goto(origin);
   await page.getByRole('button',{name:'ลองภาพจำลอง'}).click();
-  await page.waitForFunction(()=>document.getElementById('markers').textContent.includes('พบ 6 marker'));
+  await page.waitForFunction(()=>document.getElementById('markers').textContent.includes('พบ 6 marker'),{},{timeout:45000});
+  await page.locator('#canvas').scrollIntoViewIfNeeded();
   const box=await page.locator('#canvas').boundingBox();
   const click=async(x,y)=>page.mouse.click(box.x+x/960*box.width,box.y+y/720*box.height);
   await click(100,100);await click(200,100);await click(500,300);await click(530,340);
