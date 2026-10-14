@@ -19,9 +19,9 @@ from scripts.feasibility.markers import marker_sheet
 
 ROOT = Path(__file__).resolve().parent
 SOURCE = ROOT/'finger_wrap.scad'
-DEFAULT_DIR = ROOT/'printables'/'finger-wrap-v1'
-CACHE_DIR = ROOT/'generated'/'finger-wrap-v1'
-VERSION = 'finger-wrap-v1'
+DEFAULT_DIR = ROOT/'printables'/'finger-wrap-v2'
+CACHE_DIR = ROOT/'generated'/'finger-wrap-v2'
+VERSION = 'finger-wrap-v2'
 FINGERS = [
     (21, 'left-thumb', 'ซ้าย · นิ้วโป้ง', 20),
     (22, 'left-middle', 'ซ้าย · นิ้วกลาง', 17),
@@ -35,7 +35,23 @@ _build_lock = threading.Lock()
 
 
 def recipe_hash():
-    return hashlib.sha256(SOURCE.read_bytes()+Path(__file__).read_bytes()+(ROOT/'finger-wrap-guide.th.md').read_bytes()).hexdigest()
+    return hashlib.sha256(SOURCE.read_bytes()+Path(__file__).read_bytes()+(ROOT/'finger-wrap-guide.th.md').read_bytes()
+                          +(ROOT/'finger-wrap-fit-check.csv').read_bytes()).hexdigest()
+
+
+def model_dimensions(diameter, edge):
+    """Nominal CAD datums shared by Python exports and the browser catalog."""
+    return {'marker_edge_mm':edge,'white_margin_mm':2,'tile_edge_mm':edge+4,
+            'marker_center_R_mm':[0,-(6+edge/2),diameter/2+3.15],
+            'center_to_distal_plane_mm':6+edge/2,'deck_width_mm':edge+6,
+            'length_mm':edge+14,'deck_front_y_mm':-3,'deck_back_y_mm':-(edge+17),
+            'deck_bottom_z_mm':diameter/2+1.2,'deck_top_z_mm':diameter/2+3.2,
+            'nail_seat_z_mm':diameter/2-0.6,'nail_seat_width_mm':min(8,diameter/2),
+            'support_y_mm':[-8,-(edge+12)],'registration_plane_y_mm':0,
+            'gauge_deck_contact_y_mm':-3,'gauge_side_clearance_mm':0.3,
+            'gauge_removal_required':True,'tip_clearance_length_mm':3,
+            'anatomical_tip_R_mm':None,
+            'registration_status':'removable-gauge-longitudinal-only-xz-remount-unverified'}
 
 
 def parameters(values=None):
@@ -119,7 +135,7 @@ def marker_svg(marker_id, edge):
 
 
 def plate_3mf(parts):
-    """One printable build plate with explicit millimeter units and all six holders."""
+    """Explicit millimeter units, separated parts and lowest vertices on Z=0."""
     ns = 'http://schemas.microsoft.com/3dmanufacturing/core/2015/02'
     ET.register_namespace('', ns)
     tag = lambda n: f'{{{ns}}}{n}'
@@ -143,8 +159,9 @@ def plate_3mf(parts):
             ET.SubElement(v, tag('vertex'), x=f'{x:g}', y=f'{y:g}', z=f'{z:g}')
         for a,b,c in triangles:
             ET.SubElement(t, tag('triangle'), v1=str(a), v2=str(b), v3=str(c))
+        z_lift=-min(v[2] for v in vertices)
         ET.SubElement(build, tag('item'), objectid=str(index+1),
-                      transform=f'1 0 0 0 1 0 0 0 1 {30+55*(index%3)} {40+55*(index//3)} 0')
+                      transform=f'1 0 0 0 1 0 0 0 1 {30+55*(index%3)} {40+40*(index//3)} {z_lift:g}')
     output = io.BytesIO()
     with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED) as archive:
         archive.writestr('[Content_Types].xml', '<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml"/></Types>')
@@ -181,14 +198,20 @@ def build_kit(values, output, executable=None):
             'marker_edge_mm = 10;',f'marker_edge_mm = {edge:g};')
         files[f'{role}-{marker_id}.scad'] = preset.encode('utf-8')
         files[f'marker-{marker_id}.svg'] = marker_svg(marker_id,edge)
+        gauge_name=f'{role}-{marker_id}-seating-gauge.stl'
+        result=subprocess.run([str(executable),'--export-format','binstl','-o',str(output/gauge_name),
+            '-D','part="gauge"','-D',f'finger_diameter_mm={diameter}',
+            '-D',f'marker_edge_mm={edge}',str(SOURCE)],capture_output=True,timeout=60,
+            env={**os.environ,'QT_QPA_PLATFORM':'offscreen'})
+        if result.returncode or not (output/gauge_name).exists():
+            raise RuntimeError('OpenSCAD could not export the seating gauge')
+        files[gauge_name]=(output/gauge_name).read_bytes()
+        gauge_evidence=mesh_evidence(files[gauge_name])
+        files[f'{role}-{marker_id}-seating-gauge.scad']=preset.replace('part = "holder";', 'part = "gauge";').encode('utf-8')
         models.append({'id':marker_id,'role':role,'label':label,'diameter_mm':diameter,
             'stl':name,'scad':f'{role}-{marker_id}.scad','marker_svg':f'marker-{marker_id}.svg', 'marker_edge_mm':edge,
-            'white_margin_mm':2,'tile_edge_mm':tile,
-            'marker_center_R_mm':[0,-(1+2+edge/2),diameter/2+2-0.8+2-0.2+0.15],
-            'center_to_distal_plane_mm':1+2+edge/2,
-            'deck_width_mm':tile+2,'length_mm':tile+10,
-            'registration_plane_y_mm':0,'outer_stop_y_mm':1.2,
-            'anatomical_tip_R_mm':None,'registration_status':'longitudinal-stop-only-xz-unverified',
+            **model_dimensions(diameter,edge),'gauge_stl':gauge_name,
+            'gauge_scad':f'{role}-{marker_id}-seating-gauge.scad','gauge_mesh':gauge_evidence,
             'mesh':evidence})
     strap = output/'tpu-ladder-strip.stl'
     result = subprocess.run([str(executable),'--export-format','binstl','-o',str(strap),'-D','part="strap"',str(SOURCE)],
@@ -198,14 +221,18 @@ def build_kit(values, output, executable=None):
     files[strap.name] = strap.read_bytes()
     strap_evidence = mesh_evidence(files[strap.name])
     files['markers-a4.svg'] = marker_sheet([i for i,_,_,_ in FINGERS],edge_mm=edge,quiet_mm=2).encode('utf-8')
-    files['all-six-holders.3mf'] = plate_3mf([(m['stl'],files[m['stl']]) for m in models])
+    files['all-six-holders-and-gauges.3mf'] = plate_3mf([(name,files[name]) for m in models for name in [m['stl'],m['gauge_stl']]])
+    for model in models:
+        name=f'{model["role"]}-{model["id"]}-fit-pair.3mf'
+        files[name]=plate_3mf([(n,files[n]) for n in [model['stl'],model['gauge_stl']]])
     files['finger-wrap.scad'] = SOURCE.read_bytes()
     guide = (ROOT/'finger-wrap-guide.th.md').read_bytes()
     files['วิธีพิมพ์และสวม.th.md'] = guide
-    manifest = {'schema_version':1,'design_version':VERSION,'units':'mm','dictionary':'DICT_4X4_100',
+    files['fit-check.csv'] = (ROOT/'finger-wrap-fit-check.csv').read_bytes()
+    manifest = {'schema_version':2,'design_version':VERSION,'units':'mm','dictionary':'DICT_4X4_100',
         'parameters':p,'source_sha256':source_hash,'recipe_sha256':recipe_hash(),'opencv_version':cv2.__version__,
         'status':'experimental-unprinted-not-valid-for-scoring',
-        'measurement_valid':False,'calibration_required':'Physical marker dimensions, remount drift and anatomical X/Z remain unverified',
+        'measurement_valid':False,'calibration_required':'Gauge fit, printed dimensions, gauge removal drift, remount repeatability and anatomical X/Z remain unverified',
         'models':models,'strap_mesh':strap_evidence,
         'files':{name:{'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()} for name,data in files.items()}}
     files['manifest.json'] = json.dumps(manifest,ensure_ascii=False,indent=2,allow_nan=False).encode('utf-8')

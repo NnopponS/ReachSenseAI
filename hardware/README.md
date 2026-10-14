@@ -2,11 +2,13 @@
 
 ## Six-finger printable wrap (Web path)
 
-The new [six-finger wrap source](finger_wrap.scad) and [Thai printing/seating guide](finger-wrap-guide.th.md) support separate thumb/middle/little markers on both hands. The deck's distal edge and the fingertip stop's **inner** surface share Y=0; the outer wall extends 1.2 mm farther. This defines longitudinal registration only, not a verified anatomical 3D point.
+The v2 [six-finger wrap source](finger_wrap.scad) and [Thai printing/seating guide](finger-wrap-guide.th.md) support separate thumb/middle/little markers on both hands. A **removable seating gauge** abuts the deck at Y=-3 and locates the fingertip against its inner face at Y=0. Lift the gauge off before measuring. The wearable deck stops 3 mm short of the tip reference; two dorsal bearing pads and separated strap pairs help locate the holder. Their physical fit and ability to resist slipping/rotation remain untested.
 
-The Web CAD page offers 12–26 mm candidate openings and 8–16 mm marker black edges, both in 0.5 mm increments. Its 493 shared meshes are exported from this source, with checked closure, connectedness, volume and SHA-256. The actual displayed STL bytes are also downloaded. Single-color holders use printed matte black/white paper or sticker markers, with the full 2 mm white margins retained. The optional ladder strip is TPU-only and needs a return-loop/fastener; a 6 mm hook-and-loop strap can be used instead.
+The Web CAD page offers 12–26 mm candidate openings and 8–16 mm marker black edges, both in 0.5 mm increments. Its 493 size pairs contain 986 holder/gauge meshes exported from this source, with checked closure, connectedness, volume and SHA-256. Both actual displayed meshes are also downloaded. The finger illustration and seating-gap slider are explanatory and are excluded from exports/calibration. Single-color holders use matte paper/sticker markers with full 2 mm white margins. The optional ladder strip is TPU-only and needs a fastener; two 6 mm hook-and-loop straps per finger are the alternative.
 
-[Default six-part ZIP](printables/finger-wrap-v1/reachsense-six-finger-kit.zip) · [millimeter 3MF build plate](printables/finger-wrap-v1/all-six-holders.3mf) · [A4 marker artwork](printables/finger-wrap-v1/markers-a4.svg). The browser exports custom-size kits with six STL/SCAD files, all artwork, a 3MF plate, instructions and integrity metadata. CAD/mesh checks do not validate fit, remount drift, comfort, occlusion or accuracy. Begin with one middle-finger fit print before a complete set.
+[Default v2 ZIP](printables/finger-wrap-v2/reachsense-six-finger-kit.zip) · [12-piece millimeter 3MF](printables/finger-wrap-v2/all-six-holders-and-gauges.3mf) · [middle-finger fit pair](printables/finger-wrap-v2/left-middle-22-fit-pair.3mf) · [A4 artwork](printables/finger-wrap-v2/markers-a4.svg) · [10-remount worksheet](finger-wrap-fit-check.csv). Browser custom kits include six holders, six matching gauges, both CAD presets per finger, individual fit-pair plates and integrity metadata. Begin with one middle-finger pair before a complete set. Archived v1 files are retained in the repository and are incompatible with v2 gauges.
+
+With a 10 mm black edge, the nominal longitudinal marker-center-to-tip-reference-plane distance is **11 mm** (3 mm exposed tip + 1 mm frame + 2 mm white margin + 5 mm half-edge). It is not a complete 3D marker-to-anatomical-tip vector. Anatomical X/Z remain unspecified. Verify printed gauge seating, removal shift and repeated mounting with an independent reference before reusing an offset; repeat seating checks each time. Do not subtract a fixed scalar from two marker-center distances.
 
 To rebuild without overwriting user outputs:
 
@@ -15,7 +17,7 @@ To rebuild without overwriting user outputs:
 .venv/bin/python -m hardware.finger_wrap_catalog --output-dir hardware/generated/new-catalog --jobs 4
 ```
 
-OpenSCAD 2021.01+ is only needed to change/rebuild the CAD source, not to view or download the published sizes. The cloud catalog was generated with four workers on four allocated CPUs; all 493 meshes passed the export checks. The original multi-face native jig design below is a different marker/calibration profile.
+OpenSCAD 2021.01+ is only needed to change/rebuild the CAD source, not to view or download published sizes. Rebuild the catalog with at most four workers in this cloud allocation. The original multi-face native jig design below is a different marker/calibration profile.
 
 The next physical gate is a repeatable anatomical relationship between each middle fingertip and its multi-face rigid reference. This directory supplies an adjustable CAD candidate and nominal geometry for experiments, not a validated or participant-ready fixture.
 

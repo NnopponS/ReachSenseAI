@@ -1,8 +1,10 @@
 # CAD catalogs contain byte-level integrity records. Preserve source/artwork bytes
 # on Windows as well as Linux; never normalize binary manufacturing artifacts.
+.gitattributes text eol=lf
 hardware/finger_wrap.scad text eol=lf
 hardware/finger_wrap.py text eol=lf
 hardware/finger-wrap-guide.th.md text eol=lf
+hardware/finger-wrap-fit-check.csv text eol=lf
 hardware/printables/** text eol=lf
 hardware/printables/**/*.stl binary
 hardware/printables/**/*.3mf binary

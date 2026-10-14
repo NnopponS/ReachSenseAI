@@ -1,0 +1,661 @@
+{
+  "schema_version": 2,
+  "design_version": "finger-wrap-v2",
+  "units": "mm",
+  "dictionary": "DICT_4X4_100",
+  "parameters": {
+    "edge": 10.0,
+    "d21": 20.0,
+    "d22": 17.0,
+    "d23": 14.0,
+    "d31": 20.0,
+    "d32": 17.0,
+    "d33": 14.0
+  },
+  "source_sha256": "dc2c56fded20b4c94dbc9b73e1b478bcf0903296582a8166f7bafcc2e3e4a9ec",
+  "recipe_sha256": "1b0571a41558e6d5e3c24f1674b37887fa8a73162e137cd687cec0a6b9b3aee6",
+  "opencv_version": "4.13.0",
+  "status": "experimental-unprinted-not-valid-for-scoring",
+  "measurement_valid": false,
+  "calibration_required": "Gauge fit, printed dimensions, gauge removal drift, remount repeatability and anatomical X/Z remain unverified",
+  "models": [
+    {
+      "id": 21,
+      "role": "left-thumb",
+      "label": "ซ้าย · นิ้วโป้ง",
+      "diameter_mm": 20.0,
+      "stl": "left-thumb-21.stl",
+      "scad": "left-thumb-21.scad",
+      "marker_svg": "marker-21.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -11.0,
+        13.15
+      ],
+      "center_to_distal_plane_mm": 11.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "deck_front_y_mm": -3,
+      "deck_back_y_mm": -27.0,
+      "deck_bottom_z_mm": 11.2,
+      "deck_top_z_mm": 13.2,
+      "nail_seat_z_mm": 9.4,
+      "nail_seat_width_mm": 8,
+      "support_y_mm": [
+        -8,
+        -22.0
+      ],
+      "registration_plane_y_mm": 0,
+      "gauge_deck_contact_y_mm": -3,
+      "gauge_side_clearance_mm": 0.3,
+      "gauge_removal_required": true,
+      "tip_clearance_length_mm": 3,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "removable-gauge-longitudinal-only-xz-remount-unverified",
+      "gauge_stl": "left-thumb-21-seating-gauge.stl",
+      "gauge_scad": "left-thumb-21-seating-gauge.scad",
+      "gauge_mesh": {
+        "triangles": 84,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 669.344,
+        "bounds_mm": [
+          [
+            -10.3,
+            -10.0,
+            -5.0
+          ],
+          [
+            10.3,
+            1.2,
+            14.4
+          ]
+        ]
+      },
+      "mesh": {
+        "triangles": 812,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 1990.508,
+        "bounds_mm": [
+          [
+            -17.1,
+            -27.0,
+            0.0
+          ],
+          [
+            17.1,
+            -3.0,
+            13.2
+          ]
+        ]
+      }
+    },
+    {
+      "id": 22,
+      "role": "left-middle",
+      "label": "ซ้าย · นิ้วกลาง",
+      "diameter_mm": 17.0,
+      "stl": "left-middle-22.stl",
+      "scad": "left-middle-22.scad",
+      "marker_svg": "marker-22.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -11.0,
+        11.65
+      ],
+      "center_to_distal_plane_mm": 11.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "deck_front_y_mm": -3,
+      "deck_back_y_mm": -27.0,
+      "deck_bottom_z_mm": 9.7,
+      "deck_top_z_mm": 11.7,
+      "nail_seat_z_mm": 7.9,
+      "nail_seat_width_mm": 8,
+      "support_y_mm": [
+        -8,
+        -22.0
+      ],
+      "registration_plane_y_mm": 0,
+      "gauge_deck_contact_y_mm": -3,
+      "gauge_side_clearance_mm": 0.3,
+      "gauge_removal_required": true,
+      "tip_clearance_length_mm": 3,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "removable-gauge-longitudinal-only-xz-remount-unverified",
+      "gauge_stl": "left-middle-22-seating-gauge.stl",
+      "gauge_scad": "left-middle-22-seating-gauge.scad",
+      "gauge_mesh": {
+        "triangles": 84,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 626.144,
+        "bounds_mm": [
+          [
+            -10.3,
+            -10.0,
+            -4.25
+          ],
+          [
+            10.3,
+            1.2,
+            12.9
+          ]
+        ]
+      },
+      "mesh": {
+        "triangles": 780,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 1866.471,
+        "bounds_mm": [
+          [
+            -15.6,
+            -27.0,
+            0.0
+          ],
+          [
+            15.6,
+            -3.0,
+            11.7
+          ]
+        ]
+      }
+    },
+    {
+      "id": 23,
+      "role": "left-little",
+      "label": "ซ้าย · นิ้วก้อย",
+      "diameter_mm": 14.0,
+      "stl": "left-little-23.stl",
+      "scad": "left-little-23.scad",
+      "marker_svg": "marker-23.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -11.0,
+        10.15
+      ],
+      "center_to_distal_plane_mm": 11.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "deck_front_y_mm": -3,
+      "deck_back_y_mm": -27.0,
+      "deck_bottom_z_mm": 8.2,
+      "deck_top_z_mm": 10.2,
+      "nail_seat_z_mm": 6.4,
+      "nail_seat_width_mm": 7.0,
+      "support_y_mm": [
+        -8,
+        -22.0
+      ],
+      "registration_plane_y_mm": 0,
+      "gauge_deck_contact_y_mm": -3,
+      "gauge_side_clearance_mm": 0.3,
+      "gauge_removal_required": true,
+      "tip_clearance_length_mm": 3,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "removable-gauge-longitudinal-only-xz-remount-unverified",
+      "gauge_stl": "left-little-23-seating-gauge.stl",
+      "gauge_scad": "left-little-23-seating-gauge.scad",
+      "gauge_mesh": {
+        "triangles": 84,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 582.944,
+        "bounds_mm": [
+          [
+            -10.3,
+            -10.0,
+            -3.5
+          ],
+          [
+            10.3,
+            1.2,
+            11.4
+          ]
+        ]
+      },
+      "mesh": {
+        "triangles": 796,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 1743.377,
+        "bounds_mm": [
+          [
+            -14.1,
+            -27.0,
+            0.0
+          ],
+          [
+            14.1,
+            -3.0,
+            10.2
+          ]
+        ]
+      }
+    },
+    {
+      "id": 31,
+      "role": "right-thumb",
+      "label": "ขวา · นิ้วโป้ง",
+      "diameter_mm": 20.0,
+      "stl": "right-thumb-31.stl",
+      "scad": "right-thumb-31.scad",
+      "marker_svg": "marker-31.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -11.0,
+        13.15
+      ],
+      "center_to_distal_plane_mm": 11.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "deck_front_y_mm": -3,
+      "deck_back_y_mm": -27.0,
+      "deck_bottom_z_mm": 11.2,
+      "deck_top_z_mm": 13.2,
+      "nail_seat_z_mm": 9.4,
+      "nail_seat_width_mm": 8,
+      "support_y_mm": [
+        -8,
+        -22.0
+      ],
+      "registration_plane_y_mm": 0,
+      "gauge_deck_contact_y_mm": -3,
+      "gauge_side_clearance_mm": 0.3,
+      "gauge_removal_required": true,
+      "tip_clearance_length_mm": 3,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "removable-gauge-longitudinal-only-xz-remount-unverified",
+      "gauge_stl": "right-thumb-31-seating-gauge.stl",
+      "gauge_scad": "right-thumb-31-seating-gauge.scad",
+      "gauge_mesh": {
+        "triangles": 84,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 669.344,
+        "bounds_mm": [
+          [
+            -10.3,
+            -10.0,
+            -5.0
+          ],
+          [
+            10.3,
+            1.2,
+            14.4
+          ]
+        ]
+      },
+      "mesh": {
+        "triangles": 812,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 1990.508,
+        "bounds_mm": [
+          [
+            -17.1,
+            -27.0,
+            0.0
+          ],
+          [
+            17.1,
+            -3.0,
+            13.2
+          ]
+        ]
+      }
+    },
+    {
+      "id": 32,
+      "role": "right-middle",
+      "label": "ขวา · นิ้วกลาง",
+      "diameter_mm": 17.0,
+      "stl": "right-middle-32.stl",
+      "scad": "right-middle-32.scad",
+      "marker_svg": "marker-32.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -11.0,
+        11.65
+      ],
+      "center_to_distal_plane_mm": 11.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "deck_front_y_mm": -3,
+      "deck_back_y_mm": -27.0,
+      "deck_bottom_z_mm": 9.7,
+      "deck_top_z_mm": 11.7,
+      "nail_seat_z_mm": 7.9,
+      "nail_seat_width_mm": 8,
+      "support_y_mm": [
+        -8,
+        -22.0
+      ],
+      "registration_plane_y_mm": 0,
+      "gauge_deck_contact_y_mm": -3,
+      "gauge_side_clearance_mm": 0.3,
+      "gauge_removal_required": true,
+      "tip_clearance_length_mm": 3,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "removable-gauge-longitudinal-only-xz-remount-unverified",
+      "gauge_stl": "right-middle-32-seating-gauge.stl",
+      "gauge_scad": "right-middle-32-seating-gauge.scad",
+      "gauge_mesh": {
+        "triangles": 84,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 626.144,
+        "bounds_mm": [
+          [
+            -10.3,
+            -10.0,
+            -4.25
+          ],
+          [
+            10.3,
+            1.2,
+            12.9
+          ]
+        ]
+      },
+      "mesh": {
+        "triangles": 780,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 1866.471,
+        "bounds_mm": [
+          [
+            -15.6,
+            -27.0,
+            0.0
+          ],
+          [
+            15.6,
+            -3.0,
+            11.7
+          ]
+        ]
+      }
+    },
+    {
+      "id": 33,
+      "role": "right-little",
+      "label": "ขวา · นิ้วก้อย",
+      "diameter_mm": 14.0,
+      "stl": "right-little-33.stl",
+      "scad": "right-little-33.scad",
+      "marker_svg": "marker-33.svg",
+      "marker_edge_mm": 10.0,
+      "white_margin_mm": 2,
+      "tile_edge_mm": 14.0,
+      "marker_center_R_mm": [
+        0,
+        -11.0,
+        10.15
+      ],
+      "center_to_distal_plane_mm": 11.0,
+      "deck_width_mm": 16.0,
+      "length_mm": 24.0,
+      "deck_front_y_mm": -3,
+      "deck_back_y_mm": -27.0,
+      "deck_bottom_z_mm": 8.2,
+      "deck_top_z_mm": 10.2,
+      "nail_seat_z_mm": 6.4,
+      "nail_seat_width_mm": 7.0,
+      "support_y_mm": [
+        -8,
+        -22.0
+      ],
+      "registration_plane_y_mm": 0,
+      "gauge_deck_contact_y_mm": -3,
+      "gauge_side_clearance_mm": 0.3,
+      "gauge_removal_required": true,
+      "tip_clearance_length_mm": 3,
+      "anatomical_tip_R_mm": null,
+      "registration_status": "removable-gauge-longitudinal-only-xz-remount-unverified",
+      "gauge_stl": "right-little-33-seating-gauge.stl",
+      "gauge_scad": "right-little-33-seating-gauge.scad",
+      "gauge_mesh": {
+        "triangles": 84,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 582.944,
+        "bounds_mm": [
+          [
+            -10.3,
+            -10.0,
+            -3.5
+          ],
+          [
+            10.3,
+            1.2,
+            11.4
+          ]
+        ]
+      },
+      "mesh": {
+        "triangles": 796,
+        "closed": true,
+        "connected_components": 1,
+        "volume_mm3": 1743.377,
+        "bounds_mm": [
+          [
+            -14.1,
+            -27.0,
+            0.0
+          ],
+          [
+            14.1,
+            -3.0,
+            10.2
+          ]
+        ]
+      }
+    }
+  ],
+  "strap_mesh": {
+    "triangles": 364,
+    "closed": true,
+    "connected_components": 1,
+    "volume_mm3": 524.4,
+    "bounds_mm": [
+      [
+        -45.0,
+        -3.0,
+        0.0
+      ],
+      [
+        45.0,
+        3.0,
+        1.3
+      ]
+    ]
+  },
+  "files": {
+    "left-thumb-21.stl": {
+      "bytes": 40684,
+      "sha256": "054602f0deea1b6be60ab1e10473070076402f953c3665c6a38a0561bc2193aa"
+    },
+    "left-thumb-21.scad": {
+      "bytes": 4335,
+      "sha256": "1f21a4aacccfcf2e8439b0c93b28dcfcbd1c918895fdc152b80d1bf9e175b7d0"
+    },
+    "marker-21.svg": {
+      "bytes": 2798,
+      "sha256": "803ed2626f2ec7c04f997bd1f664b1b5171766d2d7e49b806ee67c5aa400f7cb"
+    },
+    "left-thumb-21-seating-gauge.stl": {
+      "bytes": 4284,
+      "sha256": "0f987010b885b316da331d3af0eb23eeba67931e65d2074e177f936b733c47a9"
+    },
+    "left-thumb-21-seating-gauge.scad": {
+      "bytes": 4334,
+      "sha256": "8ac0cca8b5787102634649815f249ce2649ab9c478362d2a0a541a142e449192"
+    },
+    "left-middle-22.stl": {
+      "bytes": 39084,
+      "sha256": "4fea8c8363586a384e6d3847b4ed267558447b90d3834437f67b2abbb9f86123"
+    },
+    "left-middle-22.scad": {
+      "bytes": 4335,
+      "sha256": "dc2c56fded20b4c94dbc9b73e1b478bcf0903296582a8166f7bafcc2e3e4a9ec"
+    },
+    "marker-22.svg": {
+      "bytes": 2618,
+      "sha256": "bd163f7b70604e4cc1fde0166a9a3e8a3d70d4ca4eec40d1853ed4e46706b7d5"
+    },
+    "left-middle-22-seating-gauge.stl": {
+      "bytes": 4284,
+      "sha256": "5f04c1538e19319af4749413775b93cd9d31ecb551de4c6f44db822c306ae859"
+    },
+    "left-middle-22-seating-gauge.scad": {
+      "bytes": 4334,
+      "sha256": "9549afd5a13f6d547ff5dcc5564d7f6a12968efaa2fd942bdcbe671868aa93a5"
+    },
+    "left-little-23.stl": {
+      "bytes": 39884,
+      "sha256": "b10ca9c1a55f59b5c08706a2e86573ebe2185212a42d48a2c008787f215b57e0"
+    },
+    "left-little-23.scad": {
+      "bytes": 4335,
+      "sha256": "fd9954486ba55e8545107d8f5a0f3451be9e2d8b9ebf98ca409e26f7e4236516"
+    },
+    "marker-23.svg": {
+      "bytes": 2708,
+      "sha256": "c2ba101c5ba850055458f4f11db1d3abcf47d83bff2fc23b41bb9aa45cfd967f"
+    },
+    "left-little-23-seating-gauge.stl": {
+      "bytes": 4284,
+      "sha256": "43a103d49fbaedb803d45fdc6e42e1d8160a2efbb329bcdfdaa53043e7ef0c61"
+    },
+    "left-little-23-seating-gauge.scad": {
+      "bytes": 4334,
+      "sha256": "478e8775ea76bb7a63a2271cdf9e3fb889a3eff29ffec58de56502c49b60bd40"
+    },
+    "right-thumb-31.stl": {
+      "bytes": 40684,
+      "sha256": "2b579de5ac503462874888426ed5283ab49ee4d02d68a5ce30251332a2a7d54c"
+    },
+    "right-thumb-31.scad": {
+      "bytes": 4335,
+      "sha256": "5cc473c1605262b23b3ee3c5f95f105aebf27a4ef9ae16f7c1597a86e5c6c949"
+    },
+    "marker-31.svg": {
+      "bytes": 2618,
+      "sha256": "6836140a3e17193e5ab2bb079a8694d30bd0352b68755bf6b0f9ec023b39cf90"
+    },
+    "right-thumb-31-seating-gauge.stl": {
+      "bytes": 4284,
+      "sha256": "0f987010b885b316da331d3af0eb23eeba67931e65d2074e177f936b733c47a9"
+    },
+    "right-thumb-31-seating-gauge.scad": {
+      "bytes": 4334,
+      "sha256": "474f3327e6ef95055c8b677a2ca1cf2e737c1fb9d7e3f4974254a44c3a2857a6"
+    },
+    "right-middle-32.stl": {
+      "bytes": 39084,
+      "sha256": "0cb9319b14b79537718a6089d1360346ec8ac15b0c0586b62d91f6bf78ec0253"
+    },
+    "right-middle-32.scad": {
+      "bytes": 4335,
+      "sha256": "de4584675a267cfbe8d7d8a7c2f569acc5d80bc278bb9ea7825202ec865bfce1"
+    },
+    "marker-32.svg": {
+      "bytes": 2438,
+      "sha256": "0d90e74aa2714dbba414e4c26a50a37ff06688aecbaae799f8de1a83660979d4"
+    },
+    "right-middle-32-seating-gauge.stl": {
+      "bytes": 4284,
+      "sha256": "5f04c1538e19319af4749413775b93cd9d31ecb551de4c6f44db822c306ae859"
+    },
+    "right-middle-32-seating-gauge.scad": {
+      "bytes": 4334,
+      "sha256": "f411cbc8174f6ad24d1960638b5fb9020485f235fff003d39d476809d5f3700f"
+    },
+    "right-little-33.stl": {
+      "bytes": 39884,
+      "sha256": "b10ca9c1a55f59b5c08706a2e86573ebe2185212a42d48a2c008787f215b57e0"
+    },
+    "right-little-33.scad": {
+      "bytes": 4335,
+      "sha256": "536c5907ad384e5cfcd832f1479f025da216d1bec2b3c197f2ecfe2f5077e90c"
+    },
+    "marker-33.svg": {
+      "bytes": 2618,
+      "sha256": "e3e518c58fcc4b344077feddfa3f7980a658aec074ac19e0dec3ba53bd5a9afc"
+    },
+    "right-little-33-seating-gauge.stl": {
+      "bytes": 4284,
+      "sha256": "43a103d49fbaedb803d45fdc6e42e1d8160a2efbb329bcdfdaa53043e7ef0c61"
+    },
+    "right-little-33-seating-gauge.scad": {
+      "bytes": 4334,
+      "sha256": "70a7c554e3b87efe2edb0041501dbb629f95eca39987cc17bce8e2838382b3fc"
+    },
+    "tpu-ladder-strip.stl": {
+      "bytes": 18284,
+      "sha256": "16fd45f34108e72218a5f724f2dc5678511495da7ba9d6edcd1e8476ee158b75"
+    },
+    "markers-a4.svg": {
+      "bytes": 15955,
+      "sha256": "01d2cd1b7fa63ac39717f3b63ecd1e67045cc5235da3271975f2dfe2e278fc93"
+    },
+    "all-six-holders-and-gauges.3mf": {
+      "bytes": 45363,
+      "sha256": "eef3481ce7e68734ac49c381201fa6a08dfd2d363952765bae914accecbc5f84"
+    },
+    "left-thumb-21-fit-pair.3mf": {
+      "bytes": 8581,
+      "sha256": "36ced806877e5ac3ab304c6b7a395ec1dcd8f2ca32dd8462604f3506c2d75959"
+    },
+    "left-middle-22-fit-pair.3mf": {
+      "bytes": 8335,
+      "sha256": "1e53615f786d271be0300785970e77a81baf53348d3519de06653b99b9fc2d03"
+    },
+    "left-little-23-fit-pair.3mf": {
+      "bytes": 8380,
+      "sha256": "af4c5d14084036cdf660f21261fded80c7f0d76c1ff724414408b13288426d30"
+    },
+    "right-thumb-31-fit-pair.3mf": {
+      "bytes": 8541,
+      "sha256": "4d1fe618f1c84c65fbc29f4db042763cf28f113b9876e77f153fd33911657e68"
+    },
+    "right-middle-32-fit-pair.3mf": {
+      "bytes": 8305,
+      "sha256": "eb7615560b292235e2310de31aba1611500116fe90bf45bb3e1f4378e4114bd5"
+    },
+    "right-little-33-fit-pair.3mf": {
+      "bytes": 8383,
+      "sha256": "d3b7545b2b40b57df7f98b17f4c7a37e103c447ac33a2acbbc1c6b3a3241cce9"
+    },
+    "finger-wrap.scad": {
+      "bytes": 4335,
+      "sha256": "dc2c56fded20b4c94dbc9b73e1b478bcf0903296582a8166f7bafcc2e3e4a9ec"
+    },
+    "วิธีพิมพ์และสวม.th.md": {
+      "bytes": 12741,
+      "sha256": "251764df41e67e596090333e537020373493d3c61a002607fa3a74ed07a8e02d"
+    },
+    "fit-check.csv": {
+      "bytes": 585,
+      "sha256": "ab743607519aac52dbc300f7445e8c42069bb55818283435df55db35a0334aa5"
+    }
+  }
+}

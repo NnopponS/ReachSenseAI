@@ -19,8 +19,12 @@ The relationship between a marker's reference frame and its finger's anatomical 
 _Avoid_: Marker center equals fingertip, bounding-box edge equals fingertip
 
 **Anatomical fingertip endpoint**:
-The furthest point of a participant's middle finger along its length, located by gentle contact with the finger jig's internal stop.
+The furthest point of a participant's middle finger along its length. Gentle contact with a registration stop locates its longitudinal position without establishing its full three-dimensional location.
 _Avoid_: Jig endpoint, tracking reference
+
+**Removable seating gauge**:
+A temporary tool that references the finger holder and gently locates the fingertip during fitting, then leaves the fingertip exposed during measurement.
+_Avoid_: Permanent fingertip wall, anatomical calibration
 
 **Jig tracking reference**:
 A defined point on a rigid finger jig with a calibrated geometric relationship to the anatomical fingertip endpoint.
@@ -82,7 +86,7 @@ The median signed body-Y overlap of three valid trials for the participant's sel
 _Avoid_: Best reach, combined left/right score
 
 **Seating check**:
-An operator's verification that both finger registration regions remain engaged and the anatomical fingertip remains gently seated against the internal stop.
+An operator's verification that both finger registration regions remain engaged and the fingertip's relationship to its registration reference is preserved, including after removal of a seating gauge when used.
 
 **Invalidated trial**:
 A measurement attempt excluded from scoring because a required condition failed, including detected jig movement.

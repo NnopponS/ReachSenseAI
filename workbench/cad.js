@@ -1,9 +1,9 @@
-import {loadCatalog,prepareKit,markerSvg} from './model.js';
-import {CadViewer} from './viewer.js';
+import {loadCatalog,prepareKit,markerSvg} from './model.js?v=2';
+import {CadViewer} from './viewer.js?v=2';
 
 const $=id=>document.getElementById(id);
 let catalog,kit,viewer,selected=22,generation=0,dirty=false;
-const links=['downloadPlate','downloadSheet','downloadStrap','downloadGuide','downloadStl','downloadScad','downloadMarker'];
+const links=['downloadPlate','downloadSheet','downloadStrap','downloadGuide','downloadStl','downloadScad','downloadMarker','downloadGauge','downloadGaugeScad','downloadFitPair','downloadFitCheck'];
 const say=text=>{$('cadStatus').textContent=text;};
 const enabled=value=>{ $('downloadKit').disabled=!value;links.forEach(id=>$(id).setAttribute('aria-disabled',String(!value))); };
 function values(){return {edge:Number($('markerEdge').value),...Object.fromEntries(catalog.fingers.map(f=>[`d${f.id}`,Number($(`d${f.id}`).value)]))};}
@@ -32,10 +32,20 @@ async function showSelection() {
   $('modelTitle').textContent=model.label;$('modelTag').textContent=`ID ${model.id}`;
   $('metricDiameter').textContent=`${model.diameter_mm} มม.`;$('metricEdge').textContent=`${model.marker_edge_mm} มม.`;
   $('metricOffset').textContent=`${model.center_to_distal_plane_mm} มม.`;
+  updateSimulation(model);
   $('selectedFileLabel').textContent=`${model.label} · ID ${model.id}`;
   document.querySelectorAll('.finger-card').forEach(card=>{card.classList.toggle('active',Number(card.dataset.id)===selected);
     card.querySelector('button').setAttribute('aria-pressed',String(Number(card.dataset.id)===selected));});
-  if(viewer){await viewer.show(model,kit.files.get(model.marker_svg));$('viewerStatus').hidden=true;}
+  if(viewer){await viewer.show(model,kit.files.get(model.marker_svg));viewer.options(previewOptions());$('viewerStatus').hidden=true;}
+}
+function previewOptions(){return {gauge:$('showGauge').checked,finger:$('showFinger').checked,gap:Number($('fitGap').value)};}
+function updateSimulation(model=kit?.models.find(m=>m.id===selected)) {
+  if(!model)return;
+  const gap=Number($('fitGap').value);
+  $('fitGapValue').textContent=`${gap} มม.`;
+  $('simulationOffset').textContent=`${model.center_to_distal_plane_mm-gap} มม.`;
+  $('seatingStatus').textContent=gap===0?'ภาพจำลอง: ปลายนิ้วแตะระนาบอ้างอิง':'ภาพจำลอง: นิ้วถอยจากระนาบอ้างอิง ต้องตั้งใหม่';
+  viewer?.options(previewOptions());
 }
 async function apply() {
   const current=++generation;$('apply').disabled=true;enabled(false);say('กำลังเตรียม STL และ artwork ให้ตรงขนาด…');
@@ -55,8 +65,12 @@ $('downloadKit').addEventListener('click',async()=>{
   try{download(await current.exportZip(),'reachsense-six-finger-kit.zip','application/zip');say('ดาวน์โหลดชุดแล้ว · พิมพ์หน่วย mm และตรวจขอบดำจริง');}
   catch(error){say(error.message);}finally{enabled(!dirty);}
 });
-const actions={downloadPlate:()=>file('all-six-holders.3mf','model/3mf'),downloadSheet:()=>file('markers-a4.svg','image/svg+xml'),
+const actions={downloadPlate:()=>file('all-six-holders-and-gauges.3mf','model/3mf'),downloadSheet:()=>file('markers-a4.svg','image/svg+xml'),
   downloadStrap:()=>file('tpu-ladder-strip.stl','model/stl'),downloadGuide:()=>file('วิธีพิมพ์และสวม.th.md','text/markdown'),
+  downloadFitCheck:()=>file('fit-check.csv','text/csv'),
+  downloadGauge:()=>file(kit.models.find(m=>m.id===selected).gauge_stl,'model/stl'),
+  downloadGaugeScad:()=>file(kit.models.find(m=>m.id===selected).gauge_scad,'text/plain'),
+  downloadFitPair:()=>{const m=kit.models.find(m=>m.id===selected);return file(`${m.role}-${m.id}-fit-pair.3mf`,'model/3mf');},
   downloadStl:()=>file(kit.models.find(m=>m.id===selected).stl,'model/stl'),
   downloadScad:()=>file(kit.models.find(m=>m.id===selected).scad,'text/plain'),
   downloadMarker:()=>file(kit.models.find(m=>m.id===selected).marker_svg,'image/svg+xml')};
@@ -65,6 +79,8 @@ for(const [id,action] of Object.entries(actions)) {
 }
 for(const [id,name] of [['viewIso','iso'],['viewTop','top'],['viewSide','side']])$(id).addEventListener('click',()=>viewer?.view(name));
 $('apply').addEventListener('click',apply);$('markerEdge').addEventListener('input',dirtyForm);
+for(const id of ['showGauge','showFinger'])$(id).addEventListener('change',()=>updateSimulation());
+$('fitGap').addEventListener('input',()=>updateSimulation());
 try {
   catalog=await loadCatalog();cards();
   try{viewer=new CadViewer($('viewer'));}catch{$('viewerStatus').textContent='อุปกรณ์นี้ไม่รองรับภาพ 3D แต่ดาวน์โหลดไฟล์พิมพ์ได้';}

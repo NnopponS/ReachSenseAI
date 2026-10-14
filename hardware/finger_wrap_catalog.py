@@ -9,9 +9,9 @@ import shutil
 import subprocess
 
 import cv2
-from hardware.finger_wrap import SOURCE, ROOT, FINGERS, DEFAULTS, VERSION, recipe_hash, mesh_evidence
+from hardware.finger_wrap import SOURCE, ROOT, FINGERS, DEFAULTS, VERSION, recipe_hash, mesh_evidence, model_dimensions
 
-CATALOG_DIR = ROOT/'printables'/'finger-wrap-catalog-v1'
+CATALOG_DIR = ROOT/'printables'/'finger-wrap-catalog-v2'
 DIAMETERS = [12+i*.5 for i in range(29)]
 EDGES = [8+i*.5 for i in range(17)]
 
@@ -22,6 +22,7 @@ def build_catalog(directory, jobs=4):
     (directory/'meshes').mkdir()
     source = SOURCE.read_bytes()
     guide = (ROOT/'finger-wrap-guide.th.md').read_bytes()
+    fit_check = (ROOT/'finger-wrap-fit-check.csv').read_bytes()
     entries = {}
     executable = shutil.which('openscad')
     if not executable: raise RuntimeError('Install OpenSCAD to rebuild the printable catalog')
@@ -35,8 +36,16 @@ def build_catalog(directory, jobs=4):
                                 capture_output=True,timeout=60,env={**os.environ,'QT_QPA_PLATFORM':'offscreen'})
         if result.returncode: raise RuntimeError(f'OpenSCAD export failed for {key}')
         data = (directory/name).read_bytes()
+        gauge_name=f'meshes/{key}-gauge.stl'
+        result=subprocess.run([executable,'--export-format','binstl','-o',str(directory/gauge_name),
+            '-D','part="gauge"','-D',f'finger_diameter_mm={d}','-D',f'marker_edge_mm={e}',str(SOURCE)],
+            capture_output=True,timeout=60,env={**os.environ,'QT_QPA_PLATFORM':'offscreen'})
+        if result.returncode:raise RuntimeError(f'Gauge export failed for {key}')
+        gauge_data=(directory/gauge_name).read_bytes()
         return key,{'file':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),
-                    'diameter_mm':d,'edge_mm':e,'mesh':mesh_evidence(data)}
+                    'diameter_mm':d,'edge_mm':e,'mesh':mesh_evidence(data),'geometry':model_dimensions(d,e),
+                    'gauge':{'file':gauge_name,'bytes':len(gauge_data),'sha256':hashlib.sha256(gauge_data).hexdigest(),
+                             'mesh':mesh_evidence(gauge_data)}}
     with ThreadPoolExecutor(max_workers=jobs) as pool:
         for index,(key,entry) in enumerate(pool.map(export,tasks),1):
             entries[key]=entry
@@ -47,17 +56,19 @@ def build_catalog(directory, jobs=4):
     if result.returncode: raise RuntimeError('TPU strip export failed')
     strap_data=strap.read_bytes()
     marker_bits={str(i):cv2.aruco.generateImageMarker(cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_100),i,120)[::20,::20].astype(int).tolist() for i,_,_,_ in FINGERS}
-    catalog={'schema_version':1,'design_version':VERSION,'units':'mm','dictionary':'DICT_4X4_100',
+    catalog={'schema_version':2,'design_version':VERSION,'units':'mm','dictionary':'DICT_4X4_100',
              'source_sha256':hashlib.sha256(source).hexdigest(),'recipe_sha256':recipe_hash(),
              'defaults':DEFAULTS,'diameters_mm':DIAMETERS,'edges_mm':EDGES,
              'fingers':[{'id':i,'role':role,'label':label} for i,role,label,_ in FINGERS],
              'marker_bits':marker_bits,'meshes':entries,
              'strap':{'file':strap.name,'bytes':len(strap_data),'sha256':hashlib.sha256(strap_data).hexdigest(),'mesh':mesh_evidence(strap_data)},
              'assets':{'finger-wrap.scad':{'sha256':hashlib.sha256(source).hexdigest()},
-                       'guide.th.md':{'sha256':hashlib.sha256(guide).hexdigest()}},
+                       'guide.th.md':{'sha256':hashlib.sha256(guide).hexdigest()},
+                       'fit-check.csv':{'sha256':hashlib.sha256(fit_check).hexdigest()}},
              'status':'experimental-unprinted-not-valid-for-scoring','measurement_valid':False}
     (directory/'finger-wrap.scad').write_bytes(source)
     (directory/'guide.th.md').write_bytes(guide)
+    (directory/'fit-check.csv').write_bytes(fit_check)
     (directory/'catalog.json').write_text(json.dumps(catalog,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     return catalog
 

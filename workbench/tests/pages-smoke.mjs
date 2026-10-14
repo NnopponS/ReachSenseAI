@@ -5,7 +5,7 @@ import {resolve,relative,extname} from 'node:path';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 
-const prefix='/ReachSenseAI/',root=resolve('site');
+const prefix='/ReachSenseAI/',root=resolve(process.env.REACHSENSE_PAGES_DIR||'site');
 const errors=[],requests=[];
 const server=createServer(async(req,res)=>{
   try {
@@ -57,7 +57,19 @@ try {
   assert.equal(await page.locator('.finger-card').count(),6);
   assert.equal(await page.locator('#viewer canvas').count(),1);
   assert.equal(await page.locator('#viewerStatus').isHidden(),true);
-  assert.match(await page.locator('#metricOffset').innerText(),/8/);
+  assert.match(await page.locator('#metricOffset').innerText(),/11/);
+  assert.equal(await page.locator('#viewer').getAttribute('data-gauge-visible'),'true');
+  await page.locator('#showGauge').uncheck();
+  assert.equal(await page.locator('#viewer').getAttribute('data-gauge-visible'),'false');
+  await page.locator('#viewSide').click();
+  await page.screenshot({path:'workbench/test-results/cad-gauge-removed.png',fullPage:true});
+  await page.locator('#showGauge').check();
+  await page.locator('#fitGap').fill('2');await page.locator('#fitGap').dispatchEvent('input');
+  assert.equal(await page.locator('#viewer').getAttribute('data-finger-gap-mm'),'2');
+  assert.match(await page.locator('#simulationOffset').innerText(),/9 มม/);
+  assert.match(await page.locator('#seatingStatus').innerText(),/ต้องตั้งใหม่/);
+  assert.match(await page.locator('#metricOffset').innerText(),/11/);
+  await page.locator('#fitGap').fill('0');await page.locator('#fitGap').dispatchEvent('input');
   await page.locator('#viewTop').click();await page.locator('#viewSide').click();await page.locator('#viewIso').click();
   await page.screenshot({path:'workbench/test-results/cad-desktop.png',fullPage:true});
   await page.locator('.finger-card[data-id="31"] button').click();assert.match(await page.locator('#modelTag').innerText(),/31/);
@@ -65,29 +77,40 @@ try {
   await page.locator('#d22').fill('18.5');await page.locator('#markerEdge').fill('12.5');
   assert.equal(await page.locator('#downloadKit').isDisabled(),true);
   await page.locator('#apply').click();await page.waitForFunction(()=>!document.getElementById('downloadKit').disabled);
-  assert.match(await page.locator('#metricDiameter').innerText(),/18.5/);assert.match(await page.locator('#metricOffset').innerText(),/9.25/);
+  assert.match(await page.locator('#metricDiameter').innerText(),/18.5/);assert.match(await page.locator('#metricOffset').innerText(),/12.25/);
   const stlPromise=page.waitForEvent('download');await page.locator('#downloadStl').click();const stl=await capture(await stlPromise);
-  const catalog=JSON.parse(await readFile('site/cad/data/catalog.json','utf8'));
+  const catalog=JSON.parse(await readFile(resolve(root,'cad/data-v2/catalog.json'),'utf8'));
   assert.equal(createHash('sha256').update(stl).digest('hex'),catalog.meshes['d18.5-e12.5'].sha256);
+  const gaugePromise=page.waitForEvent('download');await page.locator('#downloadGauge').click();
+  const gauge=await capture(await gaugePromise);
+  assert.equal(createHash('sha256').update(gauge).digest('hex'),catalog.meshes['d18.5-e12.5'].gauge.sha256);
+  const fitPromise=page.waitForEvent('download');await page.locator('#downloadFitPair').click();
+  const {default:JSZip}=await import('jszip');
+  const fit=await JSZip.loadAsync(await capture(await fitPromise));
+  assert.equal(((await fit.file('3D/3dmodel.model').async('string')).match(/<object /g)||[]).length,2);
   const zipPromise=page.waitForEvent('download');await page.locator('#downloadKit').click();const zip=await capture(await zipPromise);
   await writeFile('workbench/test-results/browser-custom-kit.zip',zip);
   // Parse the actual client ZIP independently of the CAD module.
-  const {default:JSZip}=await import('jszip');const archive=await JSZip.loadAsync(zip);
+  const archive=await JSZip.loadAsync(zip);
   const manifest=JSON.parse(await archive.file('manifest.json').async('string'));
   assert.equal(manifest.parameters.d22,18.5);assert.equal(manifest.parameters.edge,12.5);
   assert.equal(manifest.models.length,6);assert.equal(manifest.measurement_valid,false);
   assert.deepEqual(manifest.models.map(m=>m.id),[21,22,23,31,32,33]);
   assert.equal(manifest.models[1].anatomical_tip_R_mm,null);
+  assert.equal(manifest.design_version,'finger-wrap-v2');assert.equal(manifest.models[1].gauge_removal_required,true);
+  assert.ok(archive.file('fit-check.csv'));
+  assert.equal(manifest.models.filter(m=>archive.file(m.gauge_stl)).length,6);
+  assert.ok((await archive.file('left-middle-22-seating-gauge.scad').async('string')).includes('part = "gauge";'));
   for(const name of Object.keys(manifest.files)) {
     const data=await archive.file(name).async('nodebuffer');
     assert.equal(createHash('sha256').update(data).digest('hex'),manifest.files[name].sha256);
   }
-  const plate=await JSZip.loadAsync(await archive.file('all-six-holders.3mf').async('nodebuffer'));
+  const plate=await JSZip.loadAsync(await archive.file('all-six-holders-and-gauges.3mf').async('nodebuffer'));
   const xml=await plate.file('3D/3dmodel.model').async('string');
-  assert.match(xml,/unit="millimeter"/);assert.equal((xml.match(/<object /g)||[]).length,6);assert.equal((xml.match(/<item /g)||[]).length,6);
+  assert.match(xml,/unit="millimeter"/);assert.equal((xml.match(/<object /g)||[]).length,12);assert.equal((xml.match(/<item /g)||[]).length,12);
   assert.ok((await archive.file('left-middle-22.scad').async('string')).includes('finger_diameter_mm = 18.5;'));
   assert.match(await archive.file('marker-22.svg').async('string'),/width="16.5mm"/);
-  console.log('PASS CAD: actual 3D view, six roles, changed size, exact STL hash, six-file ZIP/SCAD/SVG/3MF');
+  console.log('PASS CAD v2: actual holder/gauge STL, simulated seating/removal, six roles, changed size, exact hashes, 12-part ZIP/3MF and fit pair');
   await page.locator('#d22').fill('50');await page.locator('#apply').click();await page.waitForFunction(()=>!document.getElementById('apply').disabled);
   assert.equal(await page.locator('#downloadKit').isDisabled(),true);assert.match(await page.locator('#cadStatus').innerText(),/12–26/);
   await context.close();

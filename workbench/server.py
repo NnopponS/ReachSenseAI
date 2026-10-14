@@ -87,16 +87,17 @@ class Handler(BaseHTTPRequestHandler):
             self.respond(200, (ROOT.parent/'web'/name).read_bytes(), mime+'; charset=utf-8')
         elif path == '/cad/vendor/jszip.min.js':
             self.respond(200,(ROOT/'node_modules/jszip/dist/jszip.min.js').read_bytes(),'text/javascript; charset=utf-8')
-        elif path.startswith('/cad/data/'):
-            name=path[len('/cad/data/'):]
-            directory=ROOT.parent/'hardware/printables/finger-wrap-catalog-v1'
+        elif path.startswith('/cad/data-v2/'):
+            name=path[len('/cad/data-v2/'):]
+            directory=ROOT.parent/'hardware/printables/finger-wrap-catalog-v2'
             catalog=json.loads((directory/'catalog.json').read_text(encoding='utf-8'))
-            allowed={'catalog.json','finger-wrap.scad','guide.th.md',catalog['strap']['file'],
-                     *(entry['file'] for entry in catalog['meshes'].values())}
+            allowed={'catalog.json',*catalog['assets'],catalog['strap']['file'],
+                     *(entry['file'] for entry in catalog['meshes'].values()),
+                     *(entry['gauge']['file'] for entry in catalog['meshes'].values())}
             if name not in allowed:
                 self.respond(404,{'error':'CAD file not found'})
             else:
-                mime={'.json':'application/json','.scad':'text/plain','.md':'text/markdown','.stl':'model/stl'}[Path(name).suffix]
+                mime={'.json':'application/json','.scad':'text/plain','.md':'text/markdown','.stl':'model/stl','.csv':'text/csv'}[Path(name).suffix]
                 self.respond(200,(directory/name).read_bytes(),mime)
         elif path in THREE_ASSETS:
             self.respond(200,(ROOT/'node_modules'/'three'/THREE_ASSETS[path]).read_bytes(),'text/javascript; charset=utf-8')

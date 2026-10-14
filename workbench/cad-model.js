@@ -1,6 +1,8 @@
 import './vendor/jszip.min.js';
 
-const dataRoot=new URL('./data/',import.meta.url);
+// Version the data path as well as scripts: a cached v1 client must never
+// combine its old 8 mm metadata with the v2 11 mm physical geometry.
+const dataRoot=new URL('./data-v2/',import.meta.url);
 const cache=new Map();
 export const hash=async data=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',data))].map(v=>v.toString(16).padStart(2,'0')).join('');
 async function bytes(path,expected) {
@@ -17,7 +19,9 @@ async function bytes(path,expected) {
 export async function loadCatalog() {
   const response=await fetch(new URL('catalog.json',dataRoot));
   if(!response.ok) throw new Error('โหลดรายการขนาดไม่ได้');
-  return response.json();
+  const catalog=await response.json();
+  if(catalog.schema_version!==2) throw new Error('แบบคนละรุ่น กรุณาโหลดหน้าใหม่');
+  return catalog;
 }
 export function validateParameters(values,catalog) {
   const p={};
@@ -53,10 +57,10 @@ export function parseStl(data) {
   for(let i=0;i<count;i++) for(let j=0;j<9;j++) positions[i*9+j]=view.getFloat32(84+i*50+12+j*4,true);
   return positions;
 }
-async function plate3mf(models,files) {
+async function plate3mf(parts,files) {
   let objects='',items='';
-  models.forEach((model,i)=>{
-    const xyz=parseStl(files.get(model.stl));
+  parts.forEach((name,i)=>{
+    const xyz=parseStl(files.get(name));
     let vertices='',triangles='';const lookup=new Map(),indices=[];
     for(let j=0;j<xyz.length;j+=3) {
       const p=[xyz[j],xyz[j+1],xyz[j+2]].map(n=>Number(n.toFixed(5))),key=p.join(',');
@@ -64,8 +68,9 @@ async function plate3mf(models,files) {
       indices.push(lookup.get(key));
     }
     for(let j=0;j<indices.length;j+=3) triangles+=`<triangle v1="${indices[j]}" v2="${indices[j+1]}" v3="${indices[j+2]}"/>`;
-    objects+=`<object id="${i+1}" type="model" name="${model.role}-${model.id}"><mesh><vertices>${vertices}</vertices><triangles>${triangles}</triangles></mesh></object>`;
-    items+=`<item objectid="${i+1}" transform="1 0 0 0 1 0 0 0 1 ${30+55*(i%3)} ${40+55*Math.floor(i/3)} 0"/>`;
+    const lowestZ=Math.min(...Array.from(lookup.keys(),key=>Number(key.split(',')[2])));
+    objects+=`<object id="${i+1}" type="model" name="${name}"><mesh><vertices>${vertices}</vertices><triangles>${triangles}</triangles></mesh></object>`;
+    items+=`<item objectid="${i+1}" transform="1 0 0 0 1 0 0 0 1 ${30+55*(i%3)} ${40+40*Math.floor(i/3)} ${-lowestZ}"/>`;
   });
   const zip=new globalThis.JSZip();
   zip.file('[Content_Types].xml','<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml"/></Types>');
@@ -75,39 +80,47 @@ async function plate3mf(models,files) {
 }
 export async function prepareKit(values,catalog) {
   const p=validateParameters(values,catalog),files=new Map();
-  const [sourceBytes,guideBytes,strap]=await Promise.all([
+  const [sourceBytes,guideBytes,strap,fitCheck]=await Promise.all([
     bytes('finger-wrap.scad',catalog.assets['finger-wrap.scad'].sha256),
     bytes('guide.th.md',catalog.assets['guide.th.md'].sha256),
-    bytes(catalog.strap.file,catalog.strap.sha256)]);
+    bytes(catalog.strap.file,catalog.strap.sha256),
+    bytes('fit-check.csv',catalog.assets['fit-check.csv'].sha256)]);
   const source=new TextDecoder().decode(sourceBytes);
   const models=await Promise.all(catalog.fingers.map(async finger=>{
     const diameter=p[`d${finger.id}`],edge=p.edge;
     const entry=catalog.meshes[`d${diameter}-e${edge}`];
-    const mesh=await bytes(entry.file,entry.sha256);
+    const [mesh,gauge]=await Promise.all([bytes(entry.file,entry.sha256),bytes(entry.gauge.file,entry.gauge.sha256)]);
     const stl=`${finger.role}-${finger.id}.stl`,scad=`${finger.role}-${finger.id}.scad`,svg=`marker-${finger.id}.svg`;
     files.set(stl,mesh);files.set(svg,markerSvg(finger.id,edge,catalog));
-    files.set(scad,source.replace('marker_id = 22;',`marker_id = ${finger.id};`)
-      .replace('finger_diameter_mm = 17;',`finger_diameter_mm = ${diameter};`).replace('marker_edge_mm = 10;',`marker_edge_mm = ${edge};`));
-    return {...finger,diameter_mm:diameter,marker_edge_mm:edge,white_margin_mm:2,tile_edge_mm:edge+4,
+    const preset=source.replace('marker_id = 22;',`marker_id = ${finger.id};`)
+      .replace('finger_diameter_mm = 17;',`finger_diameter_mm = ${diameter};`).replace('marker_edge_mm = 10;',`marker_edge_mm = ${edge};`);
+    const gaugeStl=`${finger.role}-${finger.id}-seating-gauge.stl`,gaugeScad=`${finger.role}-${finger.id}-seating-gauge.scad`;
+    files.set(scad,preset);files.set(gaugeStl,gauge);
+    files.set(gaugeScad,preset.replace('part = "holder";', 'part = "gauge";'));
+    return {...finger,diameter_mm:diameter,...entry.geometry,
       stl,scad,marker_svg:svg,mesh:entry.mesh,mesh_bytes:mesh,
-      marker_center_R_mm:[0,-(3+edge/2),diameter/2+3.15],
-      center_to_distal_plane_mm:3+edge/2,deck_width_mm:edge+6,length_mm:edge+14,
-      registration_plane_y_mm:0,outer_stop_y_mm:1.2,anatomical_tip_R_mm:null,
-      registration_status:'longitudinal-stop-only-xz-unverified'};
+      gauge_stl:gaugeStl,gauge_scad:gaugeScad,gauge_mesh:entry.gauge.mesh,gauge_bytes:gauge};
   }));
   files.set('finger-wrap.scad',sourceBytes);files.set('วิธีพิมพ์และสวม.th.md',guideBytes);
   files.set('tpu-ladder-strip.stl',strap);files.set('markers-a4.svg',sheetSvg(p,catalog));
+  files.set('fit-check.csv',fitCheck);
   const kit={parameters:p,models,files,catalog};
   kit.exportFile=async name=>{
-    if(name==='all-six-holders.3mf' && !files.has(name)) files.set(name,await plate3mf(models,files));
+    if(name==='all-six-holders-and-gauges.3mf' && !files.has(name))
+      files.set(name,await plate3mf(models.flatMap(m=>[m.stl,m.gauge_stl]),files));
+    const selected=models.find(m=>name===`${m.role}-${m.id}-fit-pair.3mf`);
+    if(selected && !files.has(name)) files.set(name,await plate3mf([selected.stl,selected.gauge_stl],files));
     if(!files.has(name)) throw new Error('ไม่มีไฟล์นี้ในชุดพิมพ์');
     return files.get(name);
   };
   kit.exportZip=async()=>{
-    await kit.exportFile('all-six-holders.3mf');
-    const manifest={schema_version:1,design_version:catalog.design_version,units:'mm',dictionary:catalog.dictionary,
+    await kit.exportFile('all-six-holders-and-gauges.3mf');
+    for(const m of models) await kit.exportFile(`${m.role}-${m.id}-fit-pair.3mf`);
+    const manifest={schema_version:2,design_version:catalog.design_version,units:'mm',dictionary:catalog.dictionary,
       parameters:p,source_sha256:catalog.source_sha256,recipe_sha256:catalog.recipe_sha256,
-      status:catalog.status,measurement_valid:false,models:models.map(({mesh_bytes,...model})=>model),files:{}};
+      status:catalog.status,measurement_valid:false,
+      calibration_required:'Gauge fit, removal drift, remount repeatability and anatomical X/Z remain unverified',
+      models:models.map(({mesh_bytes,gauge_bytes,...model})=>model),files:{}};
     for(const [name,value] of files) {
       const data=typeof value==='string'?new TextEncoder().encode(value):value;
       manifest.files[name]={bytes:data.byteLength,sha256:await hash(data)};
