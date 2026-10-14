@@ -29,7 +29,24 @@ jobs:
       - name: Check staged project-path application
         env:
           REACHSENSE_BROWSER_CHANNEL: chrome
-        run: node workbench/tests/pages-smoke.mjs
+        shell: bash
+        run: |
+          set +e
+          node workbench/tests/pages-smoke.mjs > /tmp/reachsense-page-test.txt 2>&1
+          REACHSENSE_PAGE_CHECK_EXIT=$?
+          cat /tmp/reachsense-page-test.txt
+          printf '### Static Pages browser check\n\n```text\n' >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/reachsense-page-test.txt >> "$GITHUB_STEP_SUMMARY"
+          printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+          if [ "$REACHSENSE_PAGE_CHECK_EXIT" -ne 0 ]; then
+            python - <<'PY'
+          from pathlib import Path
+          message = Path('/tmp/reachsense-page-test.txt').read_text(errors='replace')[-12000:]
+          message = message.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print('::error title=Static Pages browser diagnostic::' + message)
+          PY
+          fi
+          exit "$REACHSENSE_PAGE_CHECK_EXIT"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

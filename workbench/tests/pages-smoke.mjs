@@ -24,7 +24,7 @@ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const origin=`http://127.0.0.1:${server.address().port}${prefix}`;
 const browser=await chromium.launch({headless:true,channel:process.env.REACHSENSE_BROWSER_CHANNEL || undefined,
   executablePath:process.env.CHROMIUM_EXECUTABLE || undefined,
-  args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader','--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream']});
+  args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--use-fake-device-for-media-stream','--use-fake-ui-for-media-stream']});
 await mkdir('workbench/test-results',{recursive:true});
 async function capture(download){const chunks=[];for await(const c of await download.createReadStream())chunks.push(c);return Buffer.concat(chunks);}
 try {
