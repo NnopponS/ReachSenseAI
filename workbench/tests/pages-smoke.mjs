@@ -35,8 +35,13 @@ try {
   await page.locator('#demo').click();
   await page.waitForFunction(()=>document.getElementById('markers').textContent.includes('พบ 6 marker'),{},{timeout:45000});
   await page.locator('#canvas').scrollIntoViewIfNeeded();
-  const box=await page.locator('#canvas').boundingBox();
-  for(const [x,y] of [[100,100],[200,100],[500,300],[530,340]])await page.mouse.click(box.x+x/960*box.width,box.y+y/720*box.height);
+  await page.locator('#canvas').focus();
+  // Use integer CSS coordinates: Chrome can quantize synthetic MouseEvent positions.
+  // A 100 px ruler and a 30/40 px tip delta provide an independent 3–4–5 reference.
+  for(const [x,y] of [[100,100],[200,100],[300,200],[330,240]]) {
+    const box=await page.locator('#canvas').boundingBox();
+    await page.mouse.click(Math.ceil(box.x)+x,Math.ceil(box.y)+y);
+  }
   await page.locator('#plane').check();assert.match(await page.locator('#score').innerText(),/-4.00/);
   await page.locator('#save').click();
   const recordPromise=page.waitForEvent('download');await page.locator('#export').click();

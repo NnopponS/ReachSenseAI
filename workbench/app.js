@@ -168,6 +168,10 @@ $('demo').addEventListener('click',async()=>{
     const blob=await response.blob(); if(myRevision===revision) await loadBlob(blob,true);
   } catch(error) {if(myRevision===revision) say(error.message);}
 });
+canvas.addEventListener('mousedown',event=>{
+  // Focusing a tall canvas must not scroll the image between pointer-down and click.
+  event.preventDefault();canvas.focus({preventScroll:true});
+});
 canvas.addEventListener('click',event=>{
   if (!frame || live || points.length>=4) return;
   const rect=canvas.getBoundingClientRect();
