@@ -2,7 +2,21 @@
 
 This context describes anatomical fingertip measurements during a behind-the-back shoulder flexibility test.
 
+The native research instrument and the Web camera experiment share anatomical endpoint terminology, but a Web image-plane estimate is not a validated body-frame measurement.
+
 ## Language
+
+**Image-plane estimate**:
+A provisional gap or overlap inferred from a two-dimensional image under near-coplanar, near-front-facing conditions.
+_Avoid_: Validated 3D measurement, physical contact
+
+**Six-finger marker profile**:
+A marker assignment covering the thumb, middle finger, and little finger of each hand, with each finger free to move relative to the others.
+_Avoid_: Hand rigid body, multi-face finger jig
+
+**Marker-to-tip offset**:
+The relationship between a marker's reference frame and its finger's anatomical fingertip endpoint, whose repeatability depends on placement and attachment stability.
+_Avoid_: Marker center equals fingertip, bounding-box edge equals fingertip
 
 **Anatomical fingertip endpoint**:
 The furthest point of a participant's middle finger along its length, located by gentle contact with the finger jig's internal stop.

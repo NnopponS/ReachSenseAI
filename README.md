@@ -1,5 +1,13 @@
 # ReachSenseAI
 
+## Web-first development
+
+The primary path now targets ordinary webcams and Android/iOS browsers. Start with the [Web research workbench](workbench/README.md) and the [Thai project audit and measurement plan](docs/web-first-plan.th.md). It supports camera/image marker observations and manual image-plane ruler/fingertip experiments, with the user-supplied reference table. It does not yet provide automatic or validated 3D measurements. Native Android code was not present in the imported source.
+
+The original iOS research design and source history are retained below. Its calibrated rigid-body/TrueDepth requirements differ from the new six-finger-marker Web experiment. See [source provenance and skills](docs/source-import.md).
+
+---
+
 **Behind-the-back shoulder flexibility, measured in 3D.**
 
 ReachSenseAI is a research measurement instrument in development that uses an iPhone's front TrueDepth camera and calibrated finger fixtures to estimate the gap or overlap between two middle fingertips during a behind-the-back shoulder flexibility test.
