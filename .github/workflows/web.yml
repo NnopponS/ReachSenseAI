@@ -1,8 +1,13 @@
 name: RGB web and Pages
 on:
   push:
-    branches: [develop/rgb-web]
+    branches: [main, develop/rgb-web]
   workflow_dispatch:
+    inputs:
+      deploy_pages:
+        description: Deploy the calibrated RGB Lab to GitHub Pages
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -25,6 +30,12 @@ jobs:
         working-directory: web
         env:
           REACHSENSE_BROWSER_CHANNEL: chrome
+  stage-pages:
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy_pages
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
       - name: Stage runtime assets
         run: |
@@ -35,7 +46,8 @@ jobs:
         with:
           path: site
   deploy:
-    needs: build
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy_pages
+    needs: stage-pages
     runs-on: ubuntu-latest
     permissions:
       pages: write

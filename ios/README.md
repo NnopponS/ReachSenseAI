@@ -1,5 +1,7 @@
 # Native sensor prototype
 
+Merged into `NnopponS/ReachSenseAI` main with Android and both Web modes. Use the [destination native workflow](https://github.com/NnopponS/ReachSenseAI/actions/workflows/native.yml) for new build/IPA artifacts; original run links document upstream evidence. The Thai Web workbench does not require TrueDepth.
+
 This is Milestone 1 software for front TrueDepth feasibility work. It is not yet the full measurement app and produces no flexibility score.
 
 ## Build from Windows with GitHub Actions

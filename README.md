@@ -2,7 +2,9 @@
 
 ## Web-first development
 
-The primary path now targets ordinary webcams and Android/iOS browsers. Start with the [Web research workbench](workbench/README.md) and the [Thai project audit and measurement plan](docs/web-first-plan.th.md). It supports camera/image marker observations and manual image-plane ruler/fingertip experiments, with the user-supplied reference table. It does not yet provide automatic or validated 3D measurements. Native Android code was not present in the imported source.
+The primary path now targets ordinary webcams and Android/iOS browsers. Start with the [Thai Web research workbench](workbench/README.md) and the [project audit and measurement plan](docs/web-first-plan.th.md). It supports six-marker observations and manual image-plane ruler/fingertip experiments with the user-supplied reference table. It does not yet provide automatic or validated 3D measurements.
+
+All upstream development paths are now combined: [calibrated browser RGB Lab](web/README.md), [native Android dual-camera capture](android/README.md), and [native iOS TrueDepth capture](ios/README.md). The RGB Lab has an automatic rigid-fixture pose/protocol pipeline, but its example calibration cannot produce accepted research trials. The six-finger Web experiment has different geometry and does not reuse that calibration.
 
 The original iOS research design and source history are retained below. Its calibrated rigid-body/TrueDepth requirements differ from the new six-finger-marker Web experiment. See [source provenance and skills](docs/source-import.md).
 
@@ -129,7 +131,7 @@ Scored human research follows bench acceptance. Human repeatability and equipmen
 
 ## Explore the project
 
-The [Android dual-camera APK](android/README.md) on `develop/android-dual-camera` tests simultaneous rear wide/ultrawide capture on the Samsung Galaxy S23 Ultra and exports timing evidence. GitHub Actions builds it from Windows without a local Android toolchain. Physical camera support and exposure synchronization still require checks on the phone; this capture app does not yet reconstruct stereo depth or issue a fingertip score.
+The [Android dual-camera APK](android/README.md), imported from `develop/android-dual-camera`,  tests simultaneous rear wide/ultrawide capture on the Samsung Galaxy S23 Ultra and exports timing evidence. GitHub Actions builds it from Windows without a local Android toolchain. Physical camera support and exposure synchronization still require checks on the phone; this capture app does not yet reconstruct stereo depth or issue a fingertip score.
 
 Build the [native sensor prototype](ios/README.md) on a Mac with Xcode, then run it on the initial iPhone 15 Pro Max to record feasibility observations. The simulator cannot supply TrueDepth data. Inspect the adjustable [finger-fixture candidate and STL](hardware/README.md), and use the [frame inspection tool](scripts/feasibility/README.md) for exported bench observations. Follow the [implementation ledger](docs/implementation-progress.md) for verified software evidence and open physical/device gates.
 

@@ -1,5 +1,7 @@
 # ReachSense Dual for Android
 
+Merged into `NnopponS/ReachSenseAI` main alongside iOS, calibrated RGB Lab and the Thai Web workbench. [Destination Android workflow](https://github.com/NnopponS/ReachSenseAI/actions/workflows/android.yml) runs on main changes to Android; links below document the original source build evidence. The native app's purpose remains sensor feasibility, while Web is the primary development path.
+
 This branch builds an Android APK that tests simultaneous rear wide/ultrawide capture on the researcher's Samsung Galaxy S23 Ultra. It uses one Camera2 logical session with two explicitly selected physical-camera YUV outputs. Device support is discovered and tested at runtime; a phone model or successful CI build is not hardware verification.
 
 ## Get the APK from Windows
@@ -27,6 +29,8 @@ If local storage fails, pending reports remain available across screen rotation 
 Approximate/unknown synchronization requires an optical timing experiment with a controlled flashing target or motion. Even hardware-calibrated synchronization needs optical checks and stereo calibration before declaring stereo suitability. This APK does not reconstruct depth, track fixtures or issue fingertip/clinical scores. It establishes capture evidence for that next stage.
 
 ## Build and checks
+
+Camera-independent checks in this cloud checkout: `bash scripts/check_android_jvm.sh` from the repository root. The helper verifies the pinned JSON JAR and can use the cloud Java compiler module when the `javac` launcher is absent. It does not build the APK or establish Android API/device support.
 
 GitHub Actions requires no Android installation on the researcher's Windows computer. Pushes touching `android/` or its workflow trigger checks, build, lint, signature verification and artifact upload. Manual dispatch may require the workflow to exist on the default branch; branch pushes work for this development branch.
 

@@ -44,6 +44,9 @@ class WebWorkbenchTests(unittest.TestCase):
     def test_only_workbench_assets_are_served_not_repository_or_credentials(self):
         self.assertEqual(self.request('GET', '/')[0], 200)
         self.assertEqual(self.request('GET', '/measurement.js')[0], 200)
+        self.assertEqual(self.request('GET', '/rgb-lab/')[0], 200)
+        self.assertEqual(self.request('GET', '/rgb-lab/core.js')[0], 200)
         self.assertEqual(self.request('GET', '/marker-sheet.svg')[0], 200)
         self.assertEqual(self.request('GET', '/../.git/config')[0], 404)
         self.assertEqual(self.request('GET', '/plan.md')[0], 404)
+        self.assertEqual(self.request('GET', '/rgb-lab/../android/README.md')[0], 404)

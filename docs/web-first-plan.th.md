@@ -5,7 +5,10 @@
 นำประวัติทั้งหมดจาก `imconfusedAFbruh/reachsenseai` ที่ commit
 `6ef9a47e5dc94e4e4f4e5454008b09710cee3cce` มาใน `NnopponS/ReachSenseAI`
 โดยคงโค้ด Swift/iOS, Python, CAD, artwork, แผนเดิม และ CI เดิมไว้
-ไม่มี Android native หรือ Webapp ในต้นทาง จึงไม่ได้มีแอปครบสามแพลตฟอร์มให้ merge
+จากนั้นตรวจทุก branch และ merge `develop/android-dual-camera` ที่
+`a64d63e4ca2607de10d3879fc43a5a1ce32615f2` ซึ่งมี `develop/rgb-web` ที่
+`0161fd1ac76a3faf73804376b117b5d28aabdc61` เป็น ancestor อยู่แล้ว
+จึงรวม Android และ Web ที่ไม่ได้อยู่บน `main` มาด้วย โดยเก็บประวัติครบ
 
 | ส่วน | ทำแล้วในต้นทาง | ยังขาด |
 | --- | --- | --- |
@@ -13,11 +16,13 @@
 | Swift core | unprojection, radial rectification, pair/freshness/lifecycle gates | solver สำหรับปลายนิ้วทั้งคู่และคะแนน |
 | Python | อ่าน export, สร้าง ArUco, ตรวจมุม/ID, รายงานภาพ | pose จาก geometry ที่วัดจริง, คะแนนและความแม่นยำ |
 | Hardware | CAD/STL ต้นแบบ, marker sheet, geometry สมมติ | ผลิตจริง, วัดขนาด, ทดลองเลื่อน/งอ/สวมใหม่ |
-| Android | ไม่มี native code | ใช้ Web ผ่าน browser เป็นทางแรก; native ภายหลังเมื่อมีเหตุผล |
-| Web | เพิ่มห้องทดลองใน `workbench/` | วัดอัตโนมัติ, PWA offline, validation บนมือถือจริง |
+| Android | Camera2 wide/ultrawide แบบ logical session, timing pairing/report/export | ทดลอง S23 Ultra จริง, stereo calibration/reconstruction, fingertip score |
+| Web RGB Lab (`web/`) | OpenCV.js worker, common rigid-body pose, virtual tips, body-frame score, QC/window/trials, IndexedDB/export | calibration จริง, fixture/phone validation; ตัวอย่างไม่ผ่าน research acceptance |
+| Web ใหม่ (`workbench/`) | ห้องทดลองไทยสำหรับ marker 6 นิ้ว, manual tips/ruler, เทียบตาราง | วัดอัตโนมัติด้วย geometry แบบใหม่, PWA offline, validation บนมือถือจริง |
 
-Ledger เดิมมีลิงก์ CI ที่ระบุ 8 Swift tests และ device/simulator builds ผ่านใน repository เพื่อน
-นี่เป็นหลักฐานที่ต้นทางบันทึกไว้ ไม่ใช่ผลที่รันซ้ำบน Linux เครื่องนี้
+Ledger และ execution docs เดิมมีลิงก์ CI ของ Swift/iOS/IPA, RGB Web/Pages และ Android APK
+นี่เป็นหลักฐานที่ต้นทางบันทึกไว้ ไม่ใช่ผล native build ที่รันซ้ำบน Linux เครื่องนี้
+ผลที่ตรวจใหม่อยู่ใน [validation report](web-validation.md)
 
 ## ขอบเขตที่ผู้ใช้เลือก
 
@@ -106,7 +111,7 @@ Web รุ่นนี้แสดงทั้ง projected overlap ในภา
 | --- | --- | --- |
 | A — baseline (เริ่มแล้ว) | Web ทดลอง + manual tips/ruler + detection | คะแนนบวก/ลบและขอบเกณฑ์ถูกต้อง, ภาพจริงเทียบไม้บรรทัด |
 | B — สายรัด | ออกแบบฐาน marker แบน มีความหมาย ID/ด้าน/แนวชัด ไม่บังคับท่านิ้ว | วัด black edge และ offset จริง; สวมซ้ำ/งอนิ้ว/พันหลวมแน่นแล้ววัด drift; ทดสอบการซ้อนและการบัง |
-| C — automatic 2D | เลือก middle IDs; ใช้ calibrated marker-to-tip transform; MediaPipe เป็นตัวช่วยตรวจสอบ | endpoint ที่คำนวณเทียบ manual ที่ไม่ได้ใช้เป็นข้อมูล calibrate; บัง marker ต้องหยุดให้คะแนน |
+| C — automatic 2D | เลือก middle IDs; ใช้ calibrated marker-to-tip transform; MediaPipe เป็นตัวช่วยตรวจสอบ; reuse protocol/export จาก RGB Lab แทนเขียนใหม่ทั้งหมด | endpoint ที่คำนวณเทียบ manual ที่ไม่ได้ใช้เป็นข้อมูล calibrate; บัง marker ต้องหยุดให้คะแนน |
 | D — camera/3D decision | เทียบ low-calibration 2D กับ calibrated monocular pose | error แยกตาม depth, rotation, ระยะกล้อง, device; ถ้าเกินเป้าที่ตกลง ต้องเพิ่ม calibration/กล้องอีกมุม/เซนเซอร์ |
 | E — session UX | checklist, ตรวจสวม, stable window, 3 valid trials, timeout/rejection/export | ทดลองใช้งานจริง; stale/missing observations ไม่ผ่าน; ไม่มี session score ถ้าครบไม่พอ |
 | F — validation | ระยะ gap/overlap ที่อ้างอิงอิสระและมนุษย์ตาม protocol ที่ตกลง | MAE/bias/SD/อัตราวัดไม่ได้ + วิธีวัดเทียบเกณฑ์ที่ตรงกัน |
@@ -116,6 +121,14 @@ Web รุ่นนี้แสดงทั้ง projected overlap ในภา
 วัดซ้ำในหลายวันและสวมใหม่หลายครั้ง แยกชุด calibrate ออกจากชุดประเมิน
 เป้าเดิม MAE ≤5 mm, bias ≤2 mm, SD ≤2 mm เป็น **เป้าที่ต้องทดสอบ** ไม่ใช่ผลที่ทำได้แล้ว
 การเลือกว่าพัฒนา 2D ต่อได้หรือไม่ขึ้นกับผลชุดนี้ ไม่ใช่การเลือก framework
+
+## การรวมสองโหมด Web
+
+`workbench/` คือ baseline ที่เริ่มทดลองได้ก่อนมี calibration bundle
+`web/` คือ RGB Lab อัตโนมัติของเพื่อนที่คงโค้ดเดิมไว้ และยังไม่รองรับนิ้ว 6 จุดที่ขยับอิสระ
+เซิร์ฟเวอร์ workbench ให้เปิด RGB Lab ที่ `/rgb-lab/` ได้ด้วย
+งานถัดไปควรใช้ shared observation/endpoint/protocol interfaces พร้อมหน่วยและ profile version
+เพื่อเชื่อม baseline กับ solver เดิม โดยไม่เปลี่ยน marker profile หรือยอมรับ calibration ตัวอย่างเป็นของจริง
 
 ## หลักฐานและเอกสารทางเทคนิค
 

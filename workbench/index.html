@@ -25,6 +25,7 @@
       <div class="marker-list" id="markers">ตรวจ ArUco: รอภาพ</div>
       <p class="small">กรอบสีเขียวคือ marker; จุดกึ่งกลางที่ฉายจากรูปสี่เหลี่ยมเป็นจุดอ้างอิง ไม่ใช่ปลายนิ้ว</p>
       <a href="/marker-sheet.svg" download="reachsense-markers.svg">ดาวน์โหลดแผ่น marker 21–23 / 31–33</a>
+      <p class="small"><a href="/rgb-lab/">เปิด RGB Lab เดิมสำหรับอุปกรณ์ที่ calibrate แล้ว</a> · โหมดนั้นต้องใช้อุปกรณ์แข็งและ calibration จริง</p>
     </section>
     <aside>
       <section class="card settings"><h2>02 / ตั้งค่าการทดลอง</h2>
@@ -46,6 +47,6 @@
   </div>
   <section class="card notes"><div><p class="eyebrow">การทดลองครั้งนี้</p><h2>เก็บหลักฐาน ก่อนสรุปความแม่นยำ</h2><p>ตัวเลขเป็นค่าประมาณจากภาพ ไม่ใช่การวัด 3D ที่ผ่านการรับรอง เกณฑ์มาจากภาพที่ผู้ใช้ให้ ยังไม่มีแหล่งอ้างอิง และช่วงรอยต่อบางช่วงไม่ได้ระบุ</p></div><div><p id="records">ยังไม่มีค่าที่เก็บ</p><button id="export" class="secondary" disabled>ส่งออก JSON (ไม่รวมภาพ)</button><p class="small">ค่าที่เก็บอยู่ในหน่วยความจำ ปิดหรือรีเฟรชหน้าจะหาย</p></div></section>
   <details class="card"><summary>ตารางเกณฑ์ตามภาพ (ซม.) และการติด marker</summary><div class="table-scroll"><table><thead><tr><th>ท่า</th><th>เกณฑ์</th><th>ต่ำกว่า</th><th>มาตรฐาน</th><th>สูงกว่า</th></tr></thead><tbody><tr><td>ขวาอยู่บน</td><td>ชาย</td><td>&lt;4</td><td>4–5.9</td><td>&gt;6</td></tr><tr><td>ขวาอยู่บน</td><td>หญิง</td><td>&lt;5</td><td>5–6.9</td><td>&gt;7</td></tr><tr><td>ซ้ายอยู่บน</td><td>ชาย</td><td>&lt;0</td><td>0–2.9</td><td>&gt;3</td></tr><tr><td>ซ้ายอยู่บน</td><td>หญิง</td><td>&lt;0</td><td>0–5.9</td><td>&gt;6</td></tr></tbody></table></div><p>โปรไฟล์ทดลองใหม่: ซ้าย 21=โป้ง, 22=กลาง, 23=ก้อย; ขวา 31=โป้ง, 32=กลาง, 33=ก้อย ใช้ DICT_4X4_100 พิมพ์ 100% และวัดขอบดำจริง โปรไฟล์นี้ต่างจากอุปกรณ์หลายหน้าของ iOS เดิม</p><p>เปิดกล้องบนมือถือผ่าน HTTPS และอนุญาตกล้อง ภาพจะส่งไปยังเซิร์ฟเวอร์ที่ให้บริการหน้านี้เพื่อประมวลผล ArUco โดยไม่มีการเก็บภาพ รุ่นนี้ยังไม่มีการตรวจ MediaPipe หรือการติดตามปลายนิ้วอัตโนมัติ</p></details>
-</main><footer>ReachSenseAI · Web เป็นทางหลัก · เก็บต้นแบบ iOS ไว้ครบ · Android/iOS ใช้งาน Web ผ่านเบราว์เซอร์</footer>
+</main><footer>ReachSenseAI · Web เป็นทางหลัก · รวมต้นแบบ Android / iOS / RGB Lab ไว้ครบ</footer>
 <script type="module" src="/app.js"></script>
 </body></html>

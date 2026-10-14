@@ -1,6 +1,6 @@
 # Web research workbench
 
-This is the primary development path for ordinary webcams/phone cameras. It retains the native iOS feasibility project and uses the existing Python OpenCV detector. Android and iOS access this Web app in a browser; there is no native Android implementation.
+This is the primary experiment path for ordinary webcams/phone cameras and the six-finger marker proposal. It uses the existing Python detector and coexists with the imported [automatic RGB Lab](../web/README.md), [native Android capture app](../android/README.md) and [native iOS prototype](../ios/README.md). Android/iOS can also access this workbench in a browser. The existing rigid-fixture RGB calibration is not compatible with the six-finger profile.
 
 ## Run from the repository root
 
@@ -13,6 +13,8 @@ python -m venv .venv
 ```
 
 On Windows use `.venv\Scripts\python.exe` instead. The default loopback server is for local development. Camera access on a phone requires an HTTPS deployment with the same-origin backend; plain HTTP on a LAN is insufficient. This stdlib development server is not a production hosting configuration.
+
+The same server serves the preserved RGB Lab at `/rgb-lab/`, linked from the workbench. That mode processes images locally in its OpenCV.js worker; it requires its own physical calibration bundle and does not automatically use the workbench's manual ruler points.
 
 Read [the Thai plan](../docs/web-first-plan.th.md) before collecting measurements. Upload a PNG/JPEG or explicitly open the camera, freeze a frame, click two ruler points and two visible anatomical middle fingertips, and acknowledge the image-plane assumptions. The result is a provisional signed image-plane projection, with lateral offset and straight distance reported separately. Marker detection does not automatically supply a fingertip measurement. No images are written to disk. Images are sent to this app's server for in-memory processing; this is not browser-only vision processing.
 

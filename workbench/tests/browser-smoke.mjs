@@ -46,6 +46,31 @@ try {
   assert.equal(await page.locator('#video').evaluate(video=>video.srcObject),null);
   assert.equal(await page.locator('#stop').isDisabled(),true);
   console.log('PASS synthetic camera: start, freeze, stop and track release');
+  const rgb=await context.newPage();
+  rgb.on('pageerror',error=>errors.push(error.message));
+  await rgb.goto(`${origin}/rgb-lab/`);
+  await rgb.locator('#example').click();
+  await rgb.waitForFunction(()=>document.getElementById('calibrationStatus').textContent.includes('EXPLORATORY ONLY'));
+  const workerCheck=await rgb.evaluate(async()=>{
+    const bundle=await (await fetch('./examples/exploratory.json')).json();
+    const worker=new Worker('./worker.js');
+    return await new Promise((resolve,reject)=>{
+      const timeout=setTimeout(()=>{worker.terminate();reject(new Error('RGB worker readiness timeout'));},30000);
+      worker.onerror=event=>{clearTimeout(timeout);worker.terminate();reject(new Error(event.message));};
+      worker.onmessage=({data})=>{
+        if(data.type==='error'){clearTimeout(timeout);worker.terminate();reject(new Error(data.message));}
+        if(data.type==='ready'){
+          const pixels=new Uint8Array(bundle.camera.width*bundle.camera.height*4);
+          worker.postMessage({type:'frame',id:1,time:0,width:bundle.camera.width,height:bundle.camera.height,pixels:pixels.buffer},[pixels.buffer]);
+        }
+        if(data.type==='frame'){clearTimeout(timeout);worker.terminate();resolve(data);}
+      };
+      worker.postMessage({type:'configure',bundle});
+    });
+  });
+  assert.equal(workerCheck.measurement,null);
+  assert.ok(Object.values(workerCheck.results).every(r=>r.reason==='reference-unobserved'));
+  console.log('PASS integrated RGB Lab: exploratory calibration, actual WASM worker, missing references rejected');
   await context.close();
 
   const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2});
@@ -59,6 +84,6 @@ try {
   await phone.screenshot({path:'workbench/test-results/workbench-mobile.png',fullPage:true});
   console.log('PASS mobile viewport: PNG upload, detection and no horizontal overflow (Chromium, not physical Android/iOS)');
   assert.deepEqual(errors,[]);
-  await writeFile('workbench/test-results/browser-summary.json',JSON.stringify({passed:3,errors,physical_camera_validated:false},null,2));
+  await writeFile('workbench/test-results/browser-summary.json',JSON.stringify({passed:4,errors,physical_camera_validated:false},null,2));
   console.log('PASS no browser exceptions or HTTP errors');
 } finally {await browser.close();}

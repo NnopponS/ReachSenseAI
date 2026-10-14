@@ -1,7 +1,7 @@
 name: Android dual-camera APK
 on:
   push:
-    branches: [develop/android-dual-camera]
+    branches: [main, develop/android-dual-camera]
     paths: ['android/**', '.github/workflows/android.yml']
   pull_request:
     paths: ['android/**', '.github/workflows/android.yml']

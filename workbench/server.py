@@ -22,6 +22,8 @@ ASSETS = {
     '/manifest.webmanifest': ('manifest.webmanifest', 'application/manifest+json'),
 }
 MAX_UPLOAD = 8 * 1024 * 1024
+RGB_ASSETS = {'index.html', 'style.css', 'app.js', 'core.js', 'engine.js', 'storage.js',
+              'worker.js', 'vendor/opencv.js', 'vendor/runtime.json', 'examples/exploratory.json'}
 
 
 def demonstration_image():
@@ -51,7 +53,10 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Content-Length', str(len(payload)))
         self.send_header('Cache-Control', 'no-store')
         self.send_header('X-Content-Type-Options', 'nosniff')
-        self.send_header('Content-Security-Policy', "default-src 'self'; img-src 'self' blob:; media-src 'self' blob:; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'")
+        # The pinned OpenCV Emscripten bindings generate JS functions in their worker.
+        # Keep this capability on the worker response; ordinary page scripts stay restricted.
+        wasm = " 'wasm-unsafe-eval' 'unsafe-eval'" if urlsplit(self.path).path == '/rgb-lab/worker.js' else ''
+        self.send_header('Content-Security-Policy', f"default-src 'self'; img-src 'self' blob: data:; media-src 'self' blob:; script-src 'self'{wasm}; style-src 'self'; connect-src 'self'; worker-src 'self'; frame-ancestors 'none'")
         self.end_headers()
         self.wfile.write(payload)
 
@@ -64,6 +69,10 @@ class Handler(BaseHTTPRequestHandler):
             self.respond(200, demonstration_image(), 'image/png')
         elif path == '/marker-sheet.svg':
             self.respond(200, (ROOT.parent/'hardware/prototypes/marker-sheet.svg').read_bytes(), 'image/svg+xml')
+        elif path.startswith('/rgb-lab/') and (path[len('/rgb-lab/'):] or 'index.html') in RGB_ASSETS:
+            name = path[len('/rgb-lab/'):] or 'index.html'
+            mime = {'.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json'}[Path(name).suffix]
+            self.respond(200, (ROOT.parent/'web'/name).read_bytes(), mime+'; charset=utf-8')
         elif path in ASSETS:
             filename, mime = ASSETS[path]
             self.respond(200, (ROOT/filename).read_bytes(), mime)
