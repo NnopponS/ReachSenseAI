@@ -16,3 +16,10 @@ node_modules/
 .cache/
 workbench/test-results/
 workbench/playwright-report/
+web/node_modules/
+ios/artifacts/
+android/.gradle/
+android/build/
+android/app/build/
+android/artifacts/
+android/local.properties

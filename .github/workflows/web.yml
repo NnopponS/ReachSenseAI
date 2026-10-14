@@ -1,0 +1,49 @@
+name: RGB web and Pages
+on:
+  push:
+    branches: [develop/rgb-web]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: rgb-pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+        working-directory: web
+      - run: google-chrome --version
+      - run: npm test && npm run browser-test
+        working-directory: web
+        env:
+          REACHSENSE_BROWSER_CHANNEL: chrome
+      - uses: actions/configure-pages@v5
+      - name: Stage runtime assets
+        run: |
+          mkdir site
+          cp web/*.html web/*.css web/*.js site/
+          cp -r web/vendor web/examples site/
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
